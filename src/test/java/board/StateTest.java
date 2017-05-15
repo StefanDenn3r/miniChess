@@ -50,4 +50,29 @@ public class StateTest {
         Assert.assertEquals(1, state.generateMoveList(4, 4).size());
     }
 
+    @Test
+    public void testMoveKnight() throws Exception {
+        State state = new State();
+        Assert.assertEquals(2, state.generateMoveList(1, 5).size());
+    }
+
+    @Test
+    public void testMoveRook() throws Exception {
+        State state = new State();
+        Assert.assertEquals(0, state.generateMoveList(0, 5).size());
+    }
+
+    @Test
+    public void testPlayChess() throws Exception {
+        State state = new State();
+        state.move(state.generateMoveList(1,5).get(1));
+        state.printCurrentBoard();
+        state.move(state.generateMoveList(0, 1).get(0));
+        state.printCurrentBoard();
+        Assert.assertEquals(1, state.generateMoveList(0, 5).size());
+        Assert.assertEquals(5, state.generateMoveList(2, 3).size());
+        state.move(state.generateMoveList(2,3).get(1));
+        state.printCurrentBoard();
+    }
+
 }
