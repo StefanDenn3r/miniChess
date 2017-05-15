@@ -172,4 +172,16 @@ public class State {
             else return BLACK;
         } else throw new IllegalArgumentException("Field isn't occupied");
     }
+
+    public static Board getBoard() {
+        return board;
+    }
+
+    public static int getMoves() {
+        return moves;
+    }
+
+    public static Color getSideOnMove() {
+        return sideOnMove;
+    }
 }
