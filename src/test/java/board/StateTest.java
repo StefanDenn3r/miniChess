@@ -41,7 +41,13 @@ public class StateTest {
     @Test
     public void testMoveKing() throws Exception {
         State state = new State();
-        Assert.assertEquals(state.generateMoveList(0, 0).isEmpty(), true);
-
+        Assert.assertEquals(true, state.generateMoveList(4, 5).isEmpty());
     }
+
+    @Test
+    public void testMovePawn() throws Exception {
+        State state = new State();
+        Assert.assertEquals(1, state.generateMoveList(4, 4).size());
+    }
+
 }
