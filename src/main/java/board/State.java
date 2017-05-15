@@ -132,7 +132,7 @@ public class State {
                 break;
             moves.add(new Move(new Square(x0, y0), new Square(x, y)));
         } while (stopShort);
-        return null;
+        return moves;
     }
 
     private boolean isInBounds(int x, int y) {

@@ -1,8 +1,11 @@
 package board;
 
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.junit.rules.ExpectedException.none;
@@ -33,5 +36,12 @@ public class StateTest {
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("Move is invalid");
         state.move("e6-a2");
+    }
+
+    @Test
+    public void testMoveKing() throws Exception {
+        State state = new State();
+        Assert.assertEquals(state.generateMoveList(0, 0).isEmpty(), true);
+
     }
 }
