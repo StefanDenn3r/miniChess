@@ -93,7 +93,7 @@ public class State {
                 return moves;
             }
             case 'p': {
-                int dir = getPieceColor(x, y).equals(BLACK) ? 1 : -1;
+                int dir = getPieceColor(x, y).equals(BLACK) ? -1 : 1;
                 moves.addAll(scan(x, y, -1, dir, true, ONLY));
                 moves.addAll(scan(x, y, 1, dir, true, ONLY));
                 moves.addAll(scan(x, y, 0, dir, true, FALSE));

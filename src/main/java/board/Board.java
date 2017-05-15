@@ -1,23 +1,20 @@
 package board;
 
-/**
- * Created by std on 15.05.2017.
- */
 public class Board {
     private char[][] field = {
-            {'k', 'q', 'b', 'n', 'r' },
-            {'p', 'p', 'p', 'p', 'p' },
-            {'.', '.', '.', '.', '.' },
-            {'.', '.', '.', '.', '.' },
-            {'P', 'P', 'P', 'P', 'P' },
-            {'R', 'N', 'B', 'Q', 'K' }
+            {'R', 'N', 'B', 'Q', 'K'},
+            {'P', 'P', 'P', 'P', 'P'},
+            {'.', '.', '.', '.', '.'},
+            {'.', '.', '.', '.', '.'},
+            {'p', 'p', 'p', 'p', 'p'},
+            {'k', 'q', 'b', 'n', 'r'}
     };
 
     @Override
     public String toString() {
         StringBuilder string = new StringBuilder();
-        for (char[] row : field) {
-            for (char coordinate : row) {
+        for (int i = field.length - 1; i >= 0; i--) {
+            for (char coordinate : field[i]) {
                 string.append(coordinate).append(" ");
             }
             string.append('\n');

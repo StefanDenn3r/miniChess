@@ -23,56 +23,55 @@ public class StateTest {
     @Test
     public void testMoveIsValid() throws Exception {
         State state = new State();
-        state.move(new Move(new Square(4, 5), new Square(1, 2)));
+        state.move(new Move(new Square(4, 1), new Square(1, 2)));
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("Move is invalid");
-        state.move(new Move(new Square(4, 5), new Square(1, 2)));
+        state.move(new Move(new Square(4, 1), new Square(1, 2)));
     }
 
     @Test
     public void testMove() throws Exception {
         State state = new State();
-        state.move("e6-a2");
+        state.move("e1-a4");
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("Move is invalid");
-        state.move("e6-a2");
+        state.move("e1-a4");
     }
 
     @Test
     public void testMoveKing() throws Exception {
         State state = new State();
-        Assert.assertEquals(true, state.generateMoveList(4, 5).isEmpty());
+        Assert.assertEquals(true, state.generateMoveList(4, 0).isEmpty());
     }
 
     @Test
     public void testMovePawn() throws Exception {
         State state = new State();
-        Assert.assertEquals(1, state.generateMoveList(4, 4).size());
+        Assert.assertEquals(1, state.generateMoveList(4, 1).size());
     }
 
     @Test
     public void testMoveKnight() throws Exception {
         State state = new State();
-        Assert.assertEquals(2, state.generateMoveList(1, 5).size());
+        Assert.assertEquals(2, state.generateMoveList(1, 0).size());
     }
 
     @Test
     public void testMoveRook() throws Exception {
         State state = new State();
-        Assert.assertEquals(0, state.generateMoveList(0, 5).size());
+        Assert.assertEquals(0, state.generateMoveList(0, 0).size());
     }
 
     @Test
     public void testPlayChess() throws Exception {
         State state = new State();
-        state.move(state.generateMoveList(1,5).get(1));
+        state.move(state.generateMoveList(1,0).get(0));
         state.printCurrentBoard();
-        state.move(state.generateMoveList(0, 1).get(0));
+        state.move(state.generateMoveList(0, 4).get(0));
         state.printCurrentBoard();
-        Assert.assertEquals(1, state.generateMoveList(0, 5).size());
-        Assert.assertEquals(5, state.generateMoveList(2, 3).size());
-        state.move(state.generateMoveList(2,3).get(1));
+        Assert.assertEquals(1, state.generateMoveList(0, 0).size());
+        Assert.assertEquals(5, state.generateMoveList(2, 2).size());
+        state.move(state.generateMoveList(2,2).get(1));
         state.printCurrentBoard();
     }
-
 }
