@@ -64,7 +64,7 @@ public class State {
 
     public List<Move> generateMoveList(int x, int y) {
         if (!isMoversPiece(x, y))
-            return null;
+            throw new IllegalArgumentException("Piece is not from side on Move");
         List<Move> moves = new ArrayList<Move>();
         char p = toLowerCase(board.getPiece(x, y));
         switch (p) {
