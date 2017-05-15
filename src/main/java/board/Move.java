@@ -1,11 +1,28 @@
 package board;
 
-/**
- * Created by std on 15.05.2017.
- */
+
 public class Move {
-    public Square toSquare;
-    public Square fromSquare;
+    private Square fromSquare;
+    private Square toSquare;
 
+    public Move(Square fromSquare, Square toSquare) {
+        this.fromSquare = fromSquare;
+        this.toSquare = toSquare;
+    }
 
+    public Square getToSquare() {
+        return toSquare;
+    }
+
+    public void setToSquare(Square toSquare) {
+        this.toSquare = toSquare;
+    }
+
+    public Square getFromSquare() {
+        return fromSquare;
+    }
+
+    public void setFromSquare(Square fromSquare) {
+        this.fromSquare = fromSquare;
+    }
 }

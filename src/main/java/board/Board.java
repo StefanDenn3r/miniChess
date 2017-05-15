@@ -4,7 +4,7 @@ package board;
  * Created by std on 15.05.2017.
  */
 public class Board {
-    char[][] field = {
+    private char[][] field = {
             {'k', 'q', 'b', 'n', 'r' },
             {'p', 'p', 'p', 'p', 'p' },
             {'.', '.', '.', '.', '.' },
@@ -23,5 +23,13 @@ public class Board {
             string.append('\n');
         }
         return string.toString();
+    }
+
+    public char getPiece(int x, int y) {
+        return field[y][x];
+    }
+
+    public void setPiece(int x, int y, char c) {
+        field[y][x] = c;
     }
 }
