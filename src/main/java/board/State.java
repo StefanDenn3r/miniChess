@@ -62,7 +62,10 @@ public class State {
         final Square toSquare = move.getToSquare();
         final int toSquareX = toSquare.getX();
         final int toSquareY = toSquare.getY();
-        board.setPiece(toSquareX, toSquareY, tmp);
+        if (toUpperCase(board.getPiece(toSquareX, toSquareY)) == 'P' && toSquareY == 0 || toSquareY == 5)
+            board.setPiece(toSquareX, toSquareY, (char) (tmp + 1));
+        else
+            board.setPiece(toSquareX, toSquareY, tmp);
 
         changeSideOnMove();
         return move;

@@ -35,7 +35,7 @@ public class Client {
         RandomPlayer player = new RandomPlayer();
         Client client = new Client("imcs.svcs.cs.pdx.edu", "3589", "win_ner", "halloandi");
         try {
-            client.accept("12826", 'w');
+            client.accept("12828", 'w');
             String move = "";
             String tmp = "";
             state.printCurrentBoard();
@@ -47,6 +47,7 @@ public class Client {
                 System.out.println(tmp);
                 System.out.println("---------------------------------");
                 move = client.getMove();
+                state.move(move);
                 System.out.println("---------------------------------");
                 state.printCurrentBoard();
                 System.out.println(move);
