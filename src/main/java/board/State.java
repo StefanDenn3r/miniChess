@@ -65,7 +65,7 @@ public class State {
     public List<Move> generateMoveList() {
         List<Move> moves = new ArrayList<Move>();
         for (int y = 0; y < board.getField().length; y++) {
-            for (int x = 0; y < board.getField()[y].length; x++) {
+            for (int x = 0; x < board.getField()[y].length; x++) {
                 if (isMoversPiece(x, y))
                     generateMoveListForPiece(moves, x, y);
             }

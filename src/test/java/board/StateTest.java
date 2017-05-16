@@ -93,4 +93,10 @@ public class StateTest {
         state.move("a4-a3");
         state.printCurrentBoard();
     }
+
+    @Test
+    public void testMoveGenerator(){
+        State state = new State();
+        assertEquals(7, state.generateMoveList().size());
+    }
 }
