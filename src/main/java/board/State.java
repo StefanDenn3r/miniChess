@@ -62,61 +62,66 @@ public class State {
         return move(new Move(convertToSquare(squares[0]), convertToSquare(squares[1])));
     }
 
-    public List<Move> generateMoveList(int x, int y) {
-        if (!isMoversPiece(x, y))
-            throw new IllegalArgumentException("Piece is not from side on Move");
+    public List<Move> generateMoveList() {
         List<Move> moves = new ArrayList<Move>();
-        char p = toLowerCase(board.getPiece(x, y));
-        switch (p) {
-            case 'q': {
-                moves.addAll(symmscan(x, y, 0, 1, false, TRUE));
-                moves.addAll(symmscan(x, y, 1, 1, false, TRUE));
-                return moves;
+        for (int y = 0; y < board.getField().length; y++) {
+            for (int x = 0; y < board.getField()[y].length; x++) {
+                if (isMoversPiece(x, y))
+                    generateMoveListForPiece(moves, x, y);
             }
-            case 'k': {
-                moves.addAll(symmscan(x, y, 0, 1, true, TRUE));
-                moves.addAll(symmscan(x, y, 1, 1, true, TRUE));
-                return moves;
-            }
-            case 'r': {
-                moves.addAll(symmscan(x, y, 0, 1, false, TRUE));
-                return moves;
-            }
-            case 'b': {
-                moves.addAll(symmscan(x, y, 0, 1, false, TRUE));
-                moves.addAll(symmscan(x, y, 1, 1, false, TRUE));
-                return moves;
-            }
-            case 'n': {
-                moves.addAll(symmscan(x, y, 1, 2, true, TRUE));
-                moves.addAll(symmscan(x, y, -1, 2, true, TRUE));
-                return moves;
-            }
-            case 'p': {
-                int dir = getPieceColor(x, y).equals(BLACK) ? -1 : 1;
-                moves.addAll(scan(x, y, -1, dir, true, ONLY));
-                moves.addAll(scan(x, y, 1, dir, true, ONLY));
-                moves.addAll(scan(x, y, 0, dir, true, FALSE));
-                return moves;
-            }
-            default:
-                return moves;
-        }
-    }
-
-    public List<Move> symmscan(int x, int y, int dx, int dy, boolean stopShort, Capture capture) {
-        List<Move> moves = new ArrayList<Move>();
-        for (int i = 0; i < 4; i++) {
-            moves.addAll(scan(x, y, dx, dy, stopShort, capture));
-            int tmp = dx;
-            dx = dy;
-            dy = -tmp;
         }
         return moves;
     }
 
-    public List<Move> scan(int x, int y, int dx, int dy, boolean stopShort, Capture capture) {
-        List<Move> moves = new ArrayList<Move>();
+    public void generateMoveListForPiece(List<Move> moves, int x, int y) {
+        char p = toLowerCase(board.getPiece(x, y));
+        switch (p) {
+            case 'q': {
+                symmscan(moves, x, y, 0, 1, false, TRUE);
+                symmscan(moves, x, y, 1, 1, false, TRUE);
+                break;
+            }
+            case 'k': {
+                symmscan(moves, x, y, 0, 1, true, TRUE);
+                symmscan(moves, x, y, 1, 1, true, TRUE);
+                break;
+            }
+            case 'r': {
+                symmscan(moves, x, y, 0, 1, false, TRUE);
+                break;
+            }
+            case 'b': {
+                symmscan(moves, x, y, 0, 1, false, TRUE);
+                symmscan(moves, x, y, 1, 1, false, TRUE);
+                break;
+            }
+            case 'n': {
+                symmscan(moves, x, y, 1, 2, true, TRUE);
+                symmscan(moves, x, y, -1, 2, true, TRUE);
+                break;
+            }
+            case 'p': {
+                int dir = getPieceColor(x, y).equals(BLACK) ? -1 : 1;
+                scan(moves, x, y, -1, dir, true, ONLY);
+                scan(moves, x, y, 1, dir, true, ONLY);
+                scan(moves, x, y, 0, dir, true, FALSE);
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    public void symmscan(List<Move> moves, int x, int y, int dx, int dy, boolean stopShort, Capture capture) {
+        for (int i = 0; i < 4; i++) {
+            scan(moves, x, y, dx, dy, stopShort, capture);
+            int tmp = dx;
+            dx = dy;
+            dy = -tmp;
+        }
+    }
+
+    public void scan(List<Move> moves, int x, int y, int dx, int dy, boolean stopShort, Capture capture) {
         int x0 = x;
         int y0 = y;
         do {
@@ -134,7 +139,6 @@ public class State {
                 break;
             moves.add(new Move(new Square(x0, y0), new Square(x, y)));
         } while (!stopShort);
-        return moves;
     }
 
     private boolean isInBounds(int x, int y) {

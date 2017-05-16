@@ -22,6 +22,10 @@ public class Board {
         return string.toString();
     }
 
+    public char[][] getField() {
+        return field;
+    }
+
     public char getPiece(int x, int y) {
         return field[y][x];
     }

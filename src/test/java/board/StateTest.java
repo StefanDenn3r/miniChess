@@ -5,6 +5,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -41,37 +42,55 @@ public class StateTest {
     @Test
     public void testMoveKing() throws Exception {
         State state = new State();
-        Assert.assertEquals(true, state.generateMoveList(4, 0).isEmpty());
+        List<Move> moves = new ArrayList<Move>();
+        state.generateMoveListForPiece(moves, 4, 0);
+        Assert.assertEquals(true, moves.isEmpty());
     }
 
     @Test
     public void testMovePawn() throws Exception {
         State state = new State();
-        Assert.assertEquals(1, state.generateMoveList(4, 1).size());
+        List<Move> moves = new ArrayList<Move>();
+        state.generateMoveListForPiece(moves, 4, 1);
+        Assert.assertEquals(1, moves.size());
     }
 
     @Test
     public void testMoveKnight() throws Exception {
         State state = new State();
-        Assert.assertEquals(2, state.generateMoveList(1, 0).size());
+        List<Move> moves = new ArrayList<Move>();
+        state.generateMoveListForPiece(moves, 1, 0);
+        Assert.assertEquals(2, moves.size());
     }
 
     @Test
     public void testMoveRook() throws Exception {
         State state = new State();
-        Assert.assertEquals(0, state.generateMoveList(0, 0).size());
+        List<Move> moves = new ArrayList<Move>();
+        state.generateMoveListForPiece(moves, 0, 0);
+        Assert.assertEquals(0, moves.size());
     }
 
     @Test
     public void testPlayChess() throws Exception {
         State state = new State();
-        state.move(state.generateMoveList(1,0).get(0));
+        List<Move> moves = new ArrayList<Move>();
+        state.generateMoveListForPiece(moves, 1,0);
+        state.move(moves.get(0));
         state.printCurrentBoard();
-        state.move(state.generateMoveList(0, 4).get(0));
+        moves = new ArrayList<Move>();
+        state.generateMoveListForPiece(moves, 0, 4);
+        state.move(moves.get(0));
         state.printCurrentBoard();
-        Assert.assertEquals(1, state.generateMoveList(0, 0).size());
-        Assert.assertEquals(5, state.generateMoveList(2, 2).size());
-        state.move(state.generateMoveList(2,2).get(1));
+        moves = new ArrayList<Move>();
+        state.generateMoveListForPiece(moves, 0, 0);
+        Assert.assertEquals(1, moves.size());
+        moves = new ArrayList<Move>();
+        state.generateMoveListForPiece(moves, 2, 2);
+        Assert.assertEquals(5, moves.size());
+        state.move(moves.get(1));
+        state.printCurrentBoard();
+        state.move("a4-a3");
         state.printCurrentBoard();
     }
 }
