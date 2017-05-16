@@ -11,7 +11,7 @@ public class BoardTest {
     @Test
     public void getPiece() throws Exception {
         Board board = new Board();
-        assertEquals(board.getPiece(0, 0), 'k');
-        assertEquals(board.getPiece(4, 5), 'K');
+        assertEquals(board.getPiece(0, 0), 'R');
+        assertEquals(board.getPiece(4, 5), 'r');
     }
 }
