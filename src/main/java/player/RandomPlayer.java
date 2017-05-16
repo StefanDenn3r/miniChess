@@ -11,10 +11,6 @@ import java.util.List;
  */
 public class RandomPlayer extends Player {
 
-    public RandomPlayer(Color color) {
-        super(color);
-    }
-
     @Override
     public void move(State state) {
         final List<Move> moves = state.generateMoveList();

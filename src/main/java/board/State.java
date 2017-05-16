@@ -76,7 +76,20 @@ public class State {
         String[] squares = split(value, '-');
         if (squares.length != 2)
             throw new IllegalArgumentException("Move is invalid");
-        move(new Move(convertToSquare(squares[0]), convertToSquare(squares[1])));
+        move(validateMove(new Move(convertToSquare(squares[0]), convertToSquare(squares[1]))));
+    }
+
+    private Move validateMove(Move move) {
+        List<Move> legalMoves = new ArrayList<Move>();
+        generateMoveListForPiece(legalMoves, move.getFromSquare().getX(), move.getFromSquare().getY());
+        for (Move legalMove : legalMoves) {
+            final Square legalMoveToSquare = legalMove.getToSquare();
+            final Square moveToSquare = move.getToSquare();
+            if (legalMoveToSquare.getX() == moveToSquare.getX() && legalMoveToSquare.getY() == moveToSquare.getY())
+                return move;
+        }
+        throw new IllegalArgumentException("Invalid move");
+
     }
 
     public List<Move> generateMoveList() {
