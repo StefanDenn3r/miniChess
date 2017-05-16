@@ -16,6 +16,11 @@ public class Square {
         return new Square(string.charAt(0) - 97, string.charAt(1) - 49);
     }
 
+    @Override
+    public String toString() {
+        return (char) (x + 97) + "" + (y + 1);
+    }
+
     public int getX() {
         return x;
     }

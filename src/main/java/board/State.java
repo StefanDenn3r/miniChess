@@ -39,16 +39,17 @@ public class State {
         System.out.println(board.toString());
     }
 
-    public void move(Move move) {
+    public Move move(Move move) {
 
         if (toUpperCase(board.getPiece(move.getToSquare().getX(), move.getToSquare().getY())) == 'K') {
             System.out.println(sideOnMove.toString() + " loses");
             finishedGame();
-            return;
+            return null;
         }
         if (moves >= 40) {
             System.out.println("Game ends in draw");
             finishedGame();
+            return null;
         }
         moveIsValid(move);
 
@@ -64,19 +65,19 @@ public class State {
         board.setPiece(toSquareX, toSquareY, tmp);
 
         changeSideOnMove();
+        return move;
     }
 
     private void finishedGame() {
         printCurrentBoard();
         gameOver = true;
-        return;
     }
 
-    public void move(String value) {
+    public Move move(String value) {
         String[] squares = split(value, '-');
         if (squares.length != 2)
             throw new IllegalArgumentException("Move is invalid");
-        move(validateMove(new Move(convertToSquare(squares[0]), convertToSquare(squares[1]))));
+        return move(validateMove(new Move(convertToSquare(squares[0]), convertToSquare(squares[1]))));
     }
 
     private Move validateMove(Move move) {
@@ -88,7 +89,7 @@ public class State {
             if (legalMoveToSquare.getX() == moveToSquare.getX() && legalMoveToSquare.getY() == moveToSquare.getY())
                 return move;
         }
-        throw new IllegalArgumentException("Invalid move");
+        throw new IllegalArgumentException("Move is invalid");
 
     }
 

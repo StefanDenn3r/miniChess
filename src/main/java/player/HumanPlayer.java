@@ -1,5 +1,6 @@
 package player;
 
+import board.Move;
 import board.State;
 
 import java.io.BufferedReader;
@@ -9,7 +10,7 @@ import java.io.InputStreamReader;
 import static board.State.gameOver;
 
 public class HumanPlayer extends Player {
-    void move(State state) {
+    Move move(State state) {
         System.out.println("Next move: ");
         final InputStreamReader inputStreamReader = new InputStreamReader(System.in);
         BufferedReader br = new BufferedReader(inputStreamReader);
@@ -17,18 +18,20 @@ public class HumanPlayer extends Player {
 
         while (!legalMove) {
             try {
-                state.move(br.readLine());
+                Move move = state.move(br.readLine());
                 legalMove = true;
+                return move;
             } catch (IllegalArgumentException e) {
-               System.out.println("Move was invalid. Next move: ");
+                System.out.println("Move was invalid. Next move: ");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        return null;
     }
 
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         State state = new State();
         Player[] players = {new RandomPlayer(), new HumanPlayer()};
         while (!gameOver) {
@@ -39,5 +42,5 @@ public class HumanPlayer extends Player {
                 players[1].move(state);
             }
         }
-    }
+    }*/
 }

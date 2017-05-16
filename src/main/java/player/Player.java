@@ -1,8 +1,9 @@
 package player;
 
+import board.Move;
 import board.State;
 
 public abstract class Player {
 
-    abstract void move(State state);
+    abstract Move move(State state);
 }

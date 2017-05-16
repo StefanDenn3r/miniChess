@@ -33,10 +33,10 @@ public class StateTest {
     @Test
     public void testMove() throws Exception {
         State state = new State();
-        state.move("e1-a4");
-        expectedException.expect(IllegalStateException.class);
+        state.move("a2-a3");
+        expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Move is invalid");
-        state.move("e1-a4");
+        state.move("a2-a3");
     }
 
     @Test

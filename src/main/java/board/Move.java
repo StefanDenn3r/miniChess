@@ -10,6 +10,11 @@ public class Move {
         this.toSquare = toSquare;
     }
 
+    @Override
+    public String toString() {
+        return fromSquare.toString() + "-" + toSquare.toString();
+    }
+
     public Square getToSquare() {
         return toSquare;
     }

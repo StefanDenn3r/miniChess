@@ -12,8 +12,8 @@ import java.util.List;
 public class RandomPlayer extends Player {
 
     @Override
-    public void move(State state) {
+    public Move move(State state) {
         final List<Move> moves = state.generateMoveList();
-        state.move(moves.get((int) ((moves.size() - 1) * Math.random())));
+        return state.move(moves.get((int) ((moves.size() - 1) * Math.random())));
     }
 }
