@@ -12,12 +12,14 @@ import static board.Square.convertToSquare;
 import static java.lang.Character.isLowerCase;
 import static java.lang.Character.isUpperCase;
 import static java.lang.Character.toLowerCase;
+import static java.lang.Character.toUpperCase;
 import static org.apache.commons.lang3.StringUtils.split;
 
 public class State {
     private static Board board;
     private static int moves;
     private static Color sideOnMove;
+    public static boolean gameOver = false;
 
     public State() {
         getInitialState();
@@ -37,7 +39,17 @@ public class State {
         System.out.println(board.toString());
     }
 
-    public State move(Move move) {
+    public void move(Move move) {
+
+        if (toUpperCase(board.getPiece(move.getToSquare().getX(), move.getToSquare().getY())) == 'K') {
+            System.out.println(sideOnMove.toString() + " loses");
+            finishedGame();
+            return;
+        }
+        if (moves >= 40) {
+            System.out.println("Game ends in draw");
+            finishedGame();
+        }
         moveIsValid(move);
 
         final Square fromSquare = move.getFromSquare();
@@ -52,14 +64,19 @@ public class State {
         board.setPiece(toSquareX, toSquareY, tmp);
 
         changeSideOnMove();
-        return this;
     }
 
-    public State move(String value) {
+    private void finishedGame() {
+        printCurrentBoard();
+        gameOver = true;
+        return;
+    }
+
+    public void move(String value) {
         String[] squares = split(value, '-');
         if (squares.length != 2)
             throw new IllegalArgumentException("Move is invalid");
-        return move(new Move(convertToSquare(squares[0]), convertToSquare(squares[1])));
+        move(new Move(convertToSquare(squares[0]), convertToSquare(squares[1])));
     }
 
     public List<Move> generateMoveList() {
@@ -91,7 +108,7 @@ public class State {
                 break;
             }
             case 'b': {
-                symmscan(moves, x, y, 0, 1, false, TRUE);
+                symmscan(moves, x, y, 0, 1, true, FALSE);
                 symmscan(moves, x, y, 1, 1, false, TRUE);
                 break;
             }
