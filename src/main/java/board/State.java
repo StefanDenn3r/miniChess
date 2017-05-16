@@ -57,21 +57,23 @@ public class State {
         final int fromSquareX = fromSquare.getX();
         final int fromSquareY = fromSquare.getY();
         char tmp = board.getPiece(fromSquareX, fromSquareY);
-        board.setPiece(fromSquareX, fromSquareY, '.');
 
         final Square toSquare = move.getToSquare();
         final int toSquareX = toSquare.getX();
         final int toSquareY = toSquare.getY();
-        if (toUpperCase(board.getPiece(toSquareX, toSquareY)) == 'P' && toSquareY == 0 || toSquareY == 5)
+        if (toUpperCase(board.getPiece(fromSquareX, fromSquareY)) == 'P' && (toSquareY == 0 || toSquareY == 5)) {
             board.setPiece(toSquareX, toSquareY, (char) (tmp + 1));
-        else
+        }
+        else {
             board.setPiece(toSquareX, toSquareY, tmp);
+        }
+        board.setPiece(fromSquareX, fromSquareY, '.');
 
         changeSideOnMove();
         return move;
     }
 
-    private void finishedGame() {
+    public void finishedGame() {
         printCurrentBoard();
         gameOver = true;
     }
@@ -84,11 +86,11 @@ public class State {
     }
 
     private Move validateMove(Move move) {
+        final Square moveToSquare = move.getToSquare();
         List<Move> legalMoves = new ArrayList<Move>();
         generateMoveListForPiece(legalMoves, move.getFromSquare().getX(), move.getFromSquare().getY());
         for (Move legalMove : legalMoves) {
             final Square legalMoveToSquare = legalMove.getToSquare();
-            final Square moveToSquare = move.getToSquare();
             if (legalMoveToSquare.getX() == moveToSquare.getX() && legalMoveToSquare.getY() == moveToSquare.getY())
                 return move;
         }

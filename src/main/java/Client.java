@@ -31,30 +31,46 @@ public class Client {
     String sendLineEnding = "\r\n";
 
     public static void main(String[] args) throws IOException {
+        char color = 'w';
+        String gameID = "12919";
         State state = new State();
-        RandomPlayer player = new RandomPlayer();
         Client client = new Client("imcs.svcs.cs.pdx.edu", "3589", "win_ner", "halloandi");
+        //acceptGame(color, gameID, state, client);
+        for (int i = 0; i < 5; i++)
+            offerGame(color, state, client);
+    }
+
+    private static void acceptGame(char color, String gameID, State state, Client client) throws IOException {
         try {
-            client.accept("12828", 'w');
-            String move = "";
-            String tmp = "";
-            state.printCurrentBoard();
-            while (move != null) {
-                tmp = player.move(state).toString();
-                client.sendMove(tmp);
-                System.out.println("---------------------------------");
-                state.printCurrentBoard();
-                System.out.println(tmp);
-                System.out.println("---------------------------------");
-                move = client.getMove();
-                state.move(move);
-                System.out.println("---------------------------------");
-                state.printCurrentBoard();
-                System.out.println(move);
-                System.out.println("---------------------------------");
-            }
+            client.accept(gameID, color);
+            interact(color, state, client);
         } finally {
             client.close();
+        }
+    }
+
+    private static void offerGame(char color, State state, Client client) throws IOException {
+        try {
+            client.offer(color);
+            interact(color, state, client);
+        } finally {
+            client.close();
+        }
+    }
+
+    private static void interact(char color, State state, Client client) throws IOException {
+        RandomPlayer player = new RandomPlayer();
+        String move = "";
+        while (move != null) {
+            if (color == 'w') {
+                client.sendMove(player.move(state).toString());
+                move = client.getMove();
+                state.move(move);
+            } else if (color == 'b') {
+                move = client.getMove();
+                state.move(move);
+                client.sendMove(player.move(state).toString());
+            }
         }
     }
 

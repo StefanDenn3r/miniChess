@@ -8,6 +8,7 @@ import org.junit.rules.ExpectedException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static board.State.getBoard;
 import static org.junit.Assert.*;
 import static org.junit.rules.ExpectedException.none;
 
@@ -124,7 +125,7 @@ public class StateTest {
                 {'p', '.', 'p', 'p', 'p'},
                 {'k', 'q', 'b', 'n', 'r'}
         };
-        state.getBoard().setField(field);
+        getBoard().setField(field);
         state.printCurrentBoard();
         state.move("c2-c3");
         state.printCurrentBoard();
