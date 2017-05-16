@@ -16,7 +16,7 @@ public class RandomPlayerTest {
     @Test
     public void play() throws Exception {
         State state = new State();
-        RandomPlayer[] players = {new RandomPlayer(BLACK), new RandomPlayer(WHITE)};
+        Player[] players = {new RandomPlayer(), new RandomPlayer()};
         while (!gameOver) {
             state.printCurrentBoard();
             players[0].move(state);
@@ -26,5 +26,4 @@ public class RandomPlayerTest {
             }
         }
     }
-
 }
