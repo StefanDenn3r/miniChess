@@ -132,4 +132,57 @@ public class StateTest {
         state.move("b2-b1");
         state.printCurrentBoard();
     }
+
+    @Test
+    public void testConvertColorOfBishop(){
+        State state = new State();
+        char[][] field = {
+                {'.', '.', 'B', 'Q', 'K'},
+                {'.', 'p', 'P', 'P', 'P'},
+                {'.', '.', '.', '.', '.'},
+                {'.', '.', '.', '.', '.'},
+                {'p', '.', 'p', 'p', 'p'},
+                {'k', 'q', 'b', 'n', 'r'}
+        };
+        state.getBoard().setField(field);
+        state.printCurrentBoard();
+        state.move("c1-b1");
+        state.printCurrentBoard();
+    }
+
+    @Test
+    public void testUnableToMove(){
+        State state = new State();
+        char[][] field = {
+                {'.', '.', '.', '.', '.'},
+                {'.', 'p', '.', '.', '.'},
+                {'.', 'P', '.', '.', '.'},
+                {'.', '.', '.', '.', '.'},
+                {'.', '.', '.', '.', '.'},
+                {'.', '.', '.', '.', '.'}
+        };
+        state.getBoard().setField(field);
+        List<Move> moves = new ArrayList<Move>();
+        state.generateMoveListForPiece(moves, 1, 3);
+        Assert.assertEquals(0, moves.size());
+    }
+
+    @Test
+    public void testSimulateSkirmishError(){
+        State state = new State();
+        char[][] field = {
+                {'R', 'N', '.', 'Q', 'K'},
+                {'.', 'B', '.', '.', 'P'},
+                {'.', 'P', '.', 'P', '.'},
+                {'b', 'p', 'P', 'p', '.'},
+                {'p', '.', 'p', '.', 'p'},
+                {'k', 'q', 'r', 'n', '.'}
+        };
+        state.getBoard().setField(field);
+        state.printCurrentBoard();
+        state.move("d1-c2");
+        state.printCurrentBoard();
+        state.move("d6-b5");
+        state.printCurrentBoard();
+    }
 }
