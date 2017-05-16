@@ -112,4 +112,24 @@ public class StateTest {
         State state = new State();
         assertEquals(7, state.generateMoveList().size());
     }
+
+    @Test
+    public void convertPawnToQueen(){
+        State state = new State();
+        char[][] field = {
+                {'.', '.', 'B', 'Q', 'K'},
+                {'.', 'p', 'P', 'P', 'P'},
+                {'.', '.', '.', '.', '.'},
+                {'.', '.', '.', '.', '.'},
+                {'p', '.', 'p', 'p', 'p'},
+                {'k', 'q', 'b', 'n', 'r'}
+        };
+        state.getBoard().setField(field);
+        state.printCurrentBoard();
+        state.move("c2-c3");
+        state.printCurrentBoard();
+        System.out.println("test");
+        state.move("b2-b1");
+        state.printCurrentBoard();
+    }
 }

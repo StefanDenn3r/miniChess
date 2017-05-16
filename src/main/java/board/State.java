@@ -17,10 +17,10 @@ import static org.apache.commons.lang3.StringUtils.split;
 
 public class State {
     private static Board board;
+
     private static int moves;
     private static Color sideOnMove;
     public static boolean gameOver = false;
-
     public State() {
         getInitialState();
     }
@@ -183,7 +183,6 @@ public class State {
         return board.getPiece(x, y) != '.';
     }
 
-
     private void changeSideOnMove() {
         if (sideOnMove.equals(WHITE)) {
             sideOnMove = BLACK;
@@ -193,12 +192,14 @@ public class State {
         }
     }
 
+
     public void moveIsValid(Move move) {
         final Square fromSquare = move.getFromSquare();
         final int x = fromSquare.getX();
         final int y = fromSquare.getY();
         if (!isMoversPiece(x, y))
-            throw new IllegalStateException("Move is invalid");
+
+            throw new IllegalStateException("Is not movers piece");
     }
 
     private boolean isMoversPiece(int x, int y) {
@@ -215,6 +216,10 @@ public class State {
 
     public static Board getBoard() {
         return board;
+    }
+
+    public static void setBoard(Board board) {
+        State.board = board;
     }
 
     public static int getMoves() {

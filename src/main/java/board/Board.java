@@ -26,6 +26,10 @@ public class Board {
         return field;
     }
 
+    public void setField(char[][] field) {
+        this.field = field;
+    }
+
     public char getPiece(int x, int y) {
         return field[y][x];
     }
