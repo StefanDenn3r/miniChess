@@ -40,6 +40,19 @@ public class StateTest {
     }
 
     @Test
+    public void testMoveTranslator() throws Exception {
+        State state = new State();
+        state.move("a2-a3");
+        state.printCurrentBoard();
+        state.move("a5-a4");
+        state.printCurrentBoard();
+        state.move("b2-b3");
+        state.printCurrentBoard();
+        state.move("b5-b4");
+        state.printCurrentBoard();
+    }
+
+    @Test
     public void testMoveKing() throws Exception {
         State state = new State();
         List<Move> moves = new ArrayList<Move>();
