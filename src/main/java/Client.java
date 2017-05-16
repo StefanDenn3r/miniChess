@@ -31,13 +31,15 @@ public class Client {
     String sendLineEnding = "\r\n";
 
     public static void main(String[] args) throws IOException {
-        char color = 'w';
+        char color = 'b';
         String gameID = "12919";
         State state = new State();
         Client client = new Client("imcs.svcs.cs.pdx.edu", "3589", "win_ner", "halloandi");
-        //acceptGame(color, gameID, state, client);
-        for (int i = 0; i < 5; i++)
+        try {
+            //acceptGame(color, gameID, state, client);
             offerGame(color, state, client);
+        } catch (Exception e) {
+        }
     }
 
     private static void acceptGame(char color, String gameID, State state, Client client) throws IOException {
