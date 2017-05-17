@@ -103,29 +103,19 @@ public class State {
         Move bestMove = null;
         Integer bestScore = MAX_VALUE;
         for (Move move : moves) {
-            int tmpScore = -negamax(this, depth, move);
+            int tmpScore = negamax(this, depth, move);
             if (bestScore > tmpScore) {
                 bestMove = move;
                 bestScore = tmpScore;
             }
         }
         return bestMove;
-
     }
 
     private int negamax(State state, int depth, Move move) {
-        if (toUpperCase(board.getPiece(move.getToSquare().getX(), move.getToSquare().getY())) == 'K') {
-            int constant;
-            if (depth > 3)
-                constant = 1500;
-            else
-                constant = depth * 1000;
-            return state.pointScore() + constant;
-        }
-        if (depth == 0)
+        if (depth == 0){
             return state.pointScore();
-
-
+        }
         Integer bestValue = MIN_VALUE;
         State tmpState = new State();
         tmpState.board.setField(state.board.deepCopyField(state.board.getField()));
@@ -280,17 +270,20 @@ public class State {
     private int getPieceScore(char c) {
         switch (c) {
             case 'p': {
-                return 100;
+                return 10;
             }
             case 'n':
             case 'b': {
-                return 300;
+                return 30;
             }
             case 'r': {
-                return 500;
+                return 50;
             }
             case 'q': {
-                return 900;
+                return 90;
+            }
+            case 'k': {
+                return 1000;
             }
             default:
                 return 0;

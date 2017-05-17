@@ -30,8 +30,8 @@ public class Client {
     String sendLineEnding = "\r\n";
 
     public static void main(String[] args) throws IOException {
-        char color = 'b';
-        String gameID = "13552";
+        char color = 'w';
+        String gameID = "13588";
         State state = new State();
         Client client = new Client("imcs.svcs.cs.pdx.edu", "3589", "win_ner", "halloandi");
         //try {

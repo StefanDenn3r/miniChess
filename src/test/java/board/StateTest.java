@@ -248,7 +248,7 @@ public class StateTest {
     public void testRescueKingFromCapture(){
         State state = new State();
         char[][] field = {
-                {'.', '.', 'R', 'Q', 'K'},
+                {'.', '.', 'R', '.', 'K'},
                 {'.', 'p', 'P', 'P', '.'},
                 {'.', '.', '.', '.', '.'},
                 {'.', '.', '.', '.', '.'},
@@ -257,6 +257,8 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        state.move("b5-a6");
+        System.out.println(state.calculateBest(2));
+        state.calculateBest(2);
+        state.printCurrentBoard();
     }
 }
