@@ -21,6 +21,7 @@ public class State {
     private static int moves;
     private static Color sideOnMove;
     public static boolean gameOver = false;
+
     public State() {
         getInitialState();
     }
@@ -63,8 +64,7 @@ public class State {
         final int toSquareY = toSquare.getY();
         if (toUpperCase(board.getPiece(fromSquareX, fromSquareY)) == 'P' && (toSquareY == 0 || toSquareY == 5)) {
             board.setPiece(toSquareX, toSquareY, (char) (tmp + 1));
-        }
-        else {
+        } else {
             board.setPiece(toSquareX, toSquareY, tmp);
         }
         board.setPiece(fromSquareX, fromSquareY, '.');
@@ -95,7 +95,6 @@ public class State {
                 return move;
         }
         throw new IllegalArgumentException("Move is invalid");
-
     }
 
     public List<Move> generateMoveList() {
@@ -109,7 +108,7 @@ public class State {
         return moves;
     }
 
-    public void generateMoveListForPiece(List<Move> moves, int x, int y) {
+    void generateMoveListForPiece(List<Move> moves, int x, int y) {
         char p = toLowerCase(board.getPiece(x, y));
         switch (p) {
             case 'q': {
@@ -148,7 +147,7 @@ public class State {
         }
     }
 
-    public void symmscan(List<Move> moves, int x, int y, int dx, int dy, boolean stopShort, Capture capture) {
+    private void symmscan(List<Move> moves, int x, int y, int dx, int dy, boolean stopShort, Capture capture) {
         for (int i = 0; i < 4; i++) {
             scan(moves, x, y, dx, dy, stopShort, capture);
             int tmp = dx;
@@ -157,7 +156,7 @@ public class State {
         }
     }
 
-    public void scan(List<Move> moves, int x, int y, int dx, int dy, boolean stopShort, Capture capture) {
+    private void scan(List<Move> moves, int x, int y, int dx, int dy, boolean stopShort, Capture capture) {
         int x0 = x;
         int y0 = y;
         do {
@@ -181,8 +180,52 @@ public class State {
         return x >= 0 && x <= 4 && y >= 0 && y <= 5;
     }
 
-    public boolean isOccupied(int x, int y) {
+    private boolean isOccupied(int x, int y) {
         return board.getPiece(x, y) != '.';
+    }
+
+    /**
+     * positiv = advantage for side on move
+     *
+     * @return
+     */
+    int pointScore() {
+        int score = 0;
+        for (char[] row : board.getField()) {
+            for (char c : row) {
+                if (isUpperCase(c)) {
+                    // If its white add to score
+                    score += getPieceScore(toLowerCase(c));
+                }
+                if (isLowerCase(c)) {
+                    // If its black sub from score
+                    score -= getPieceScore(c);
+                }
+            }
+        }
+        if (sideOnMove.equals(BLACK))
+            return -score;
+        return score;
+    }
+
+    private int getPieceScore(char c) {
+        switch (c) {
+            case 'p': {
+                return 100;
+            }
+            case 'n':
+            case 'b': {
+                return 300;
+            }
+            case 'r': {
+                return 500;
+            }
+            case 'q': {
+                return 900;
+            }
+            default:
+                return 0;
+        }
     }
 
     private void changeSideOnMove() {
@@ -195,7 +238,7 @@ public class State {
     }
 
 
-    public void moveIsValid(Move move) {
+    private void moveIsValid(Move move) {
         final Square fromSquare = move.getFromSquare();
         final int x = fromSquare.getX();
         final int y = fromSquare.getY();
