@@ -43,13 +43,13 @@ public class State {
     public Move move(Move move) {
 
         if (toUpperCase(board.getPiece(move.getToSquare().getX(), move.getToSquare().getY())) == 'K') {
-            System.out.println(sideOnMove.toString() + " loses");
             finishedGame();
+            System.out.println(sideOnMove.toString() + " wins");
             return null;
         }
         if (moves >= 40) {
-            System.out.println("Game ends in draw");
             finishedGame();
+            System.out.println("Game ends in draw");
             return null;
         }
         moveIsValid(move);

@@ -225,4 +225,21 @@ public class StateTest {
         state.move(state.calculateBestMove());
         state.printCurrentBoard();
     }
+
+    @Test
+    public void testWinLabeling(){
+        State state = new State();
+        char[][] field = {
+                {'.', '.', 'R', 'Q', 'K'},
+                {'.', 'p', 'P', 'P', 'P'},
+                {'.', '.', '.', '.', '.'},
+                {'.', '.', '.', '.', '.'},
+                {'p', 'B', 'p', 'p', 'p'},
+                {'k', 'R', 'q', 'n', 'r'}
+        };
+        state.getBoard().setField(field);
+        state.printCurrentBoard();
+        state.move("b5-a6");
+        //White wins
+    }
 }
