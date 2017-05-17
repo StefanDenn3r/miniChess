@@ -5,9 +5,15 @@ import board.State;
 
 public class NegamaxPlayer extends Player {
 
-    @Override
+    int depth;
+
+    public NegamaxPlayer(int depth) {
+        super();
+        this.depth = depth;
+    }
+
     public Move move(State state) {
-        final Move move = state.calculateBest(10);
+        final Move move = state.calculateBest(depth);
         return state.move(move);
     }
 }

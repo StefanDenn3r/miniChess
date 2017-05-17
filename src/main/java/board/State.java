@@ -14,6 +14,8 @@ import static java.lang.Character.isUpperCase;
 import static java.lang.Character.toLowerCase;
 import static java.lang.Character.toUpperCase;
 import static java.lang.Integer.MAX_VALUE;
+import static java.lang.Integer.MIN_VALUE;
+import static java.lang.Math.max;
 import static org.apache.commons.lang3.StringUtils.split;
 
 public class State {
@@ -22,6 +24,7 @@ public class State {
     private int moves;
     private Color sideOnMove;
     public boolean gameOver = false;
+    public Color winner;
 
     public State() {
         getInitialState();
@@ -44,12 +47,13 @@ public class State {
     public Move move(Move move) {
 
         if (toUpperCase(board.getPiece(move.getToSquare().getX(), move.getToSquare().getY())) == 'K') {
-            finishedGame();
-            System.out.println(sideOnMove.toString() + " wins");
+            gameOver = true;
+            winner = sideOnMove;
             return null;
         }
         if (moves >= 40) {
-            finishedGame();
+            printCurrentBoard();
+            gameOver = true;
             System.out.println("Game ends in draw");
             return null;
         }
@@ -72,11 +76,6 @@ public class State {
 
         changeSideOnMove();
         return move;
-    }
-
-    public void finishedGame() {
-        printCurrentBoard();
-        gameOver = true;
     }
 
     public Move move(String value) {
@@ -103,45 +102,35 @@ public class State {
         List<Move> moves = this.generateMoveList();
         Move bestMove = null;
         Integer bestScore = MAX_VALUE;
-        Move chessMove = null;
-        Integer chessDepth = MAX_VALUE;
         for (Move move : moves) {
-            int tmpScore = negamax(this, depth, move);
-            int chessScore = 0;
-            if (tmpScore < 0)
-                chessScore = tmpScore * -1;
-            chessScore = chessScore % 100;
-            if (chessScore != 0) {
-                if (chessScore > 50)
-                    chessScore = 100 - chessScore;
-                if (chessScore < chessDepth) {
-                    chessDepth = chessScore;
-                    chessMove = bestMove;
-                }
-            } else if (bestScore > tmpScore) {
+            int tmpScore = -negamax(this, depth, move);
+            if (bestScore > tmpScore) {
                 bestMove = move;
                 bestScore = tmpScore;
             }
         }
-        if (chessMove != null)
-            return chessMove;
         return bestMove;
 
     }
 
     private int negamax(State state, int depth, Move move) {
-        State tmpState = new State();
-        while (depth > 0) {
-            tmpState.board.setField(state.board.deepCopyField(state.board.getField()));
-            tmpState.sideOnMove = state.sideOnMove;
-            if (toUpperCase(tmpState.board.getPiece(move.getToSquare().getX(), move.getToSquare().getY())) == 'K') {
-                return depth;
-            }
-            tmpState.move(move);
-            for (Move tmpMove : tmpState.generateMoveList())
-                return tmpState.pointScore() + negamax(tmpState, depth - 1, tmpMove);
+        if (toUpperCase(board.getPiece(move.getToSquare().getX(), move.getToSquare().getY())) == 'K') {
+            return depth * 1000;
         }
-        return tmpState.pointScore();
+        if (depth == 0)
+            return state.pointScore();
+
+
+        Integer bestValue = MIN_VALUE;
+        State tmpState = new State();
+        tmpState.board.setField(state.board.deepCopyField(state.board.getField()));
+        tmpState.sideOnMove = state.sideOnMove;
+        tmpState.move(move);
+        for (Move tmpMove : tmpState.generateMoveList()) {
+            int v = -negamax(tmpState, depth - 1, tmpMove);
+            bestValue = max(bestValue, v);
+        }
+        return bestValue;
     }
 
 

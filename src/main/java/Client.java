@@ -31,14 +31,14 @@ public class Client {
 
     public static void main(String[] args) throws IOException {
         char color = 'b';
-        String gameID = "13521";
+        String gameID = "13552";
         State state = new State();
         Client client = new Client("imcs.svcs.cs.pdx.edu", "3589", "win_ner", "halloandi");
-        try {
-            acceptGame(color, gameID, state, client);
-            //offerGame(color, state, client);
-        } catch (Exception e) {
-        }
+        //try {
+        acceptGame(color, gameID, state, client);
+        //offerGame(color, state, client);
+        //} catch (Exception e) {
+        //}
     }
 
     private static void acceptGame(char color, String gameID, State state, Client client) throws IOException {
@@ -60,7 +60,7 @@ public class Client {
     }
 
     private static void interact(char color, State state, Client client) throws IOException {
-        NegamaxPlayer player = new NegamaxPlayer();
+        NegamaxPlayer player = new NegamaxPlayer(4);
         String move = "";
         while (move != null) {
             if (color == 'w') {
