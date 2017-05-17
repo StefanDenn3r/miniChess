@@ -218,7 +218,7 @@ public class StateTest {
                 {'.', '.', '.', '.', '.'},
                 {'.', '.', '.', '.', '.'},
                 {'p', '.', 'p', 'p', 'p'},
-                {'k', 'q', 'b', 'n', 'r'}
+                {'k', 'R', 'q', 'n', 'r'}
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();

@@ -105,6 +105,9 @@ public class State {
             for (Move move : moves) {
                 State tmpState = new State();
                 tmpState.board.setField(this.board.deepCopyField(this.board.getField()));
+                if (toUpperCase(tmpState.board.getPiece(move.getToSquare().getX(), move.getToSquare().getY())) == 'K'){
+                    return move;
+                }
                 tmpState.move(move);
                 int tmpScore = tmpState.pointScore();
                 if (bestScore > tmpScore) {
@@ -245,9 +248,6 @@ public class State {
             }
             case 'q': {
                 return 900;
-            }
-            case 'k': {
-                return 10000;
             }
             default:
                 return 0;
