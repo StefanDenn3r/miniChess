@@ -2,10 +2,9 @@
 // Licensed under the "MIT License"
 // Please see the file COPYING at http://github.com/BartMassey/imcs
 
-import board.Move;
 import board.State;
-import player.Player;
-import player.RandomPlayer;
+import player.HeuristicPlayer;
+import player.NegamaxPlayer;
 
 import java.io.*;
 import java.net.*;
@@ -32,12 +31,12 @@ public class Client {
 
     public static void main(String[] args) throws IOException {
         char color = 'b';
-        String gameID = "12919";
+        String gameID = "13521";
         State state = new State();
         Client client = new Client("imcs.svcs.cs.pdx.edu", "3589", "win_ner", "halloandi");
         try {
-            //acceptGame(color, gameID, state, client);
-            offerGame(color, state, client);
+            acceptGame(color, gameID, state, client);
+            //offerGame(color, state, client);
         } catch (Exception e) {
         }
     }
@@ -61,7 +60,7 @@ public class Client {
     }
 
     private static void interact(char color, State state, Client client) throws IOException {
-        RandomPlayer player = new RandomPlayer();
+        NegamaxPlayer player = new NegamaxPlayer();
         String move = "";
         while (move != null) {
             if (color == 'w') {

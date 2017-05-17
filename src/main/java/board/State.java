@@ -13,6 +13,7 @@ import static java.lang.Character.isLowerCase;
 import static java.lang.Character.isUpperCase;
 import static java.lang.Character.toLowerCase;
 import static java.lang.Character.toUpperCase;
+import static java.lang.Integer.MAX_VALUE;
 import static org.apache.commons.lang3.StringUtils.split;
 
 public class State {
@@ -97,6 +98,53 @@ public class State {
         throw new IllegalArgumentException("Move is invalid");
     }
 
+
+    public Move calculateBest(int depth) {
+        List<Move> moves = this.generateMoveList();
+        Move bestMove = null;
+        Integer bestScore = MAX_VALUE;
+        Move chessMove = null;
+        Integer chessDepth = MAX_VALUE;
+        for (Move move : moves) {
+            int tmpScore = negamax(this, depth, move);
+            int chessScore = 0;
+            if (tmpScore < 0)
+                chessScore = tmpScore * -1;
+            chessScore = chessScore % 100;
+            if (chessScore != 0) {
+                if (chessScore > 50)
+                    chessScore = 100 - chessScore;
+                if (chessScore < chessDepth) {
+                    chessDepth = chessScore;
+                    chessMove = bestMove;
+                }
+            } else if (bestScore > tmpScore) {
+                bestMove = move;
+                bestScore = tmpScore;
+            }
+        }
+        if (chessMove != null)
+            return chessMove;
+        return bestMove;
+
+    }
+
+    private int negamax(State state, int depth, Move move) {
+        State tmpState = new State();
+        while (depth > 0) {
+            tmpState.board.setField(state.board.deepCopyField(state.board.getField()));
+            tmpState.sideOnMove = state.sideOnMove;
+            if (toUpperCase(tmpState.board.getPiece(move.getToSquare().getX(), move.getToSquare().getY())) == 'K') {
+                return depth;
+            }
+            tmpState.move(move);
+            for (Move tmpMove : tmpState.generateMoveList())
+                return tmpState.pointScore() + negamax(tmpState, depth - 1, tmpMove);
+        }
+        return tmpState.pointScore();
+    }
+
+
     public Move calculateBestMove() {
         List<Move> moves = generateMoveList();
         Move bestMove = null;
@@ -105,7 +153,8 @@ public class State {
             for (Move move : moves) {
                 State tmpState = new State();
                 tmpState.board.setField(this.board.deepCopyField(this.board.getField()));
-                if (toUpperCase(tmpState.board.getPiece(move.getToSquare().getX(), move.getToSquare().getY())) == 'K'){
+                tmpState.sideOnMove = this.sideOnMove;
+                if (toUpperCase(tmpState.board.getPiece(move.getToSquare().getX(), move.getToSquare().getY())) == 'K') {
                     return move;
                 }
                 tmpState.move(move);
