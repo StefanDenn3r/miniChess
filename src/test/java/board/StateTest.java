@@ -186,4 +186,27 @@ public class StateTest {
         state.move("d6-b5");
         state.printCurrentBoard();
     }
+
+    @Test
+    public void testCalculateInitialScore(){
+        State state = new State();
+        Assert.assertEquals(0,state.pointScore());
+    }
+
+    @Test
+    public void testCalculateScore(){
+        State state = new State();
+        char[][] field = {
+                {'.', '.', 'B', 'Q', 'K'},
+                {'.', 'p', 'P', 'P', 'P'},
+                {'.', '.', '.', '.', '.'},
+                {'.', '.', '.', '.', '.'},
+                {'p', '.', 'p', 'p', 'p'},
+                {'k', 'q', 'b', 'n', 'r'}
+        };
+        getBoard().setField(field);
+        Assert.assertEquals(-1000,state.pointScore());
+        state.move("c2-c3");
+        Assert.assertEquals(1000,state.pointScore());
+    }
 }
