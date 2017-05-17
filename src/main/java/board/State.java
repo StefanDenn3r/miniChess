@@ -104,7 +104,7 @@ public class State {
         if (moves != null) {
             for (Move move : moves) {
                 State tmpState = new State();
-                tmpState.board.setField(this.board.getField());
+                tmpState.board.setField(this.board.deepCopyField(this.board.getField()));
                 tmpState.move(move);
                 int tmpScore = tmpState.pointScore();
                 if (bestScore > tmpScore) {
@@ -116,7 +116,7 @@ public class State {
         return bestMove;
     }
 
-    List<Move> generateMoveList() {
+    public List<Move> generateMoveList() {
         List<Move> moves = new ArrayList<Move>();
         for (int y = 0; y < board.getField().length; y++) {
             for (int x = 0; x < board.getField()[y].length; x++) {

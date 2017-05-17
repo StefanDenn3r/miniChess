@@ -8,7 +8,6 @@ import org.junit.rules.ExpectedException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static board.State.getBoard;
 import static org.junit.Assert.*;
 import static org.junit.rules.ExpectedException.none;
 
@@ -27,7 +26,7 @@ public class StateTest {
         State state = new State();
         state.move(new Move(new Square(4, 1), new Square(1, 2)));
         expectedException.expect(IllegalStateException.class);
-        expectedException.expectMessage("Move is invalid");
+        expectedException.expectMessage("Is not movers piece");
         state.move(new Move(new Square(4, 1), new Square(1, 2)));
     }
 
@@ -125,7 +124,7 @@ public class StateTest {
                 {'p', '.', 'p', 'p', 'p'},
                 {'k', 'q', 'b', 'n', 'r'}
         };
-        getBoard().setField(field);
+        state.getBoard().setField(field);
         state.printCurrentBoard();
         state.move("c2-c3");
         state.printCurrentBoard();
@@ -204,9 +203,26 @@ public class StateTest {
                 {'p', '.', 'p', 'p', 'p'},
                 {'k', 'q', 'b', 'n', 'r'}
         };
-        getBoard().setField(field);
+        state.getBoard().setField(field);
         Assert.assertEquals(-1000,state.pointScore());
         state.move("c2-c3");
         Assert.assertEquals(1000,state.pointScore());
+    }
+
+    @Test
+    public void testCalculateBestMove(){
+        State state = new State();
+        char[][] field = {
+                {'.', '.', 'B', 'Q', 'K'},
+                {'.', 'p', 'P', 'P', 'P'},
+                {'.', '.', '.', '.', '.'},
+                {'.', '.', '.', '.', '.'},
+                {'p', '.', 'p', 'p', 'p'},
+                {'k', 'q', 'b', 'n', 'r'}
+        };
+        state.getBoard().setField(field);
+        state.printCurrentBoard();
+        state.move(state.calculateBestMove());
+        state.printCurrentBoard();
     }
 }

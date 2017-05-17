@@ -7,8 +7,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import static board.State.gameOver;
-
 public class HumanPlayer extends Player {
     Move move(State state) {
         System.out.println("Next move: ");

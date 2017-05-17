@@ -4,9 +4,6 @@ import board.Color;
 import board.State;
 import org.junit.Test;
 
-import static board.Color.BLACK;
-import static board.Color.WHITE;
-import static board.State.gameOver;
 import static org.junit.Assert.*;
 
 /**
@@ -17,10 +14,10 @@ public class RandomPlayerTest {
     public void play() throws Exception {
         State state = new State();
         Player[] players = {new RandomPlayer(), new RandomPlayer()};
-        while (!gameOver) {
+        while (!state.gameOver) {
             state.printCurrentBoard();
             players[0].move(state);
-            if (!gameOver) {
+            if (!state.gameOver) {
                 state.printCurrentBoard();
                 players[1].move(state);
             }
