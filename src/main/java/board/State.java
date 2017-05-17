@@ -115,7 +115,12 @@ public class State {
 
     private int negamax(State state, int depth, Move move) {
         if (toUpperCase(board.getPiece(move.getToSquare().getX(), move.getToSquare().getY())) == 'K') {
-            return depth * 1000;
+            int constant;
+            if (depth > 3)
+                constant = 1500;
+            else
+                constant = depth * 1000;
+            return state.pointScore() + constant;
         }
         if (depth == 0)
             return state.pointScore();

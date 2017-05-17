@@ -222,7 +222,8 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        state.move(state.calculateBestMove());
+        System.out.println(state.calculateBest(6));
+        state.move(state.calculateBest(6));
         state.printCurrentBoard();
     }
 
@@ -241,5 +242,21 @@ public class StateTest {
         state.printCurrentBoard();
         state.move("b5-a6");
         //White wins
+    }
+
+    @Test
+    public void testRescueKingFromCapture(){
+        State state = new State();
+        char[][] field = {
+                {'.', '.', 'R', 'Q', 'K'},
+                {'.', 'p', 'P', 'P', '.'},
+                {'.', '.', '.', '.', '.'},
+                {'.', '.', '.', '.', '.'},
+                {'.', '.', '.', '.', '.'},
+                {'k', 'R', 'q', 'n', 'q'}
+        };
+        state.getBoard().setField(field);
+        state.printCurrentBoard();
+        state.move("b5-a6");
     }
 }
