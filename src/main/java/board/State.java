@@ -16,11 +16,11 @@ import static java.lang.Character.toUpperCase;
 import static org.apache.commons.lang3.StringUtils.split;
 
 public class State {
-    private static Board board;
+    private Board board;
 
-    private static int moves;
-    private static Color sideOnMove;
-    public static boolean gameOver = false;
+    private int moves;
+    private Color sideOnMove;
+    public boolean gameOver = false;
 
     public State() {
         getInitialState();
@@ -97,13 +97,36 @@ public class State {
         throw new IllegalArgumentException("Move is invalid");
     }
 
-    public List<Move> generateMoveList() {
+    public Move calculateBestMove() {
+        List<Move> moves = generateMoveList();
+        Move bestMove = null;
+        int bestScore = 100000;
+        if (moves != null) {
+            for (Move move : moves) {
+                State tmpState = new State();
+                tmpState.board.setField(this.board.getField());
+                tmpState.move(move);
+                int tmpScore = tmpState.pointScore();
+                if (bestScore > tmpScore) {
+                    bestMove = move;
+                    bestScore = tmpScore;
+                }
+            }
+        }
+        return bestMove;
+    }
+
+    List<Move> generateMoveList() {
         List<Move> moves = new ArrayList<Move>();
         for (int y = 0; y < board.getField().length; y++) {
             for (int x = 0; x < board.getField()[y].length; x++) {
                 if (isMoversPiece(x, y))
                     generateMoveListForPiece(moves, x, y);
             }
+        }
+        if (moves.isEmpty()) {
+            System.out.println(this.getSideOnMove() + " is unable to move.");
+            return null;
         }
         return moves;
     }
@@ -223,6 +246,9 @@ public class State {
             case 'q': {
                 return 900;
             }
+            case 'k': {
+                return 10000;
+            }
             default:
                 return 0;
         }
@@ -259,19 +285,19 @@ public class State {
         } else throw new IllegalArgumentException("Field isn't occupied");
     }
 
-    public static Board getBoard() {
+    public Board getBoard() {
         return board;
     }
 
-    public static void setBoard(Board board) {
-        State.board = board;
+    public void setBoard(Board board) {
+        this.board = board;
     }
 
-    public static int getMoves() {
+    public int getMoves() {
         return moves;
     }
 
-    public static Color getSideOnMove() {
+    public Color getSideOnMove() {
         return sideOnMove;
     }
 }
