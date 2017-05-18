@@ -275,11 +275,11 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        Assert.assertEquals("e1-d1", state.calculateBest(4).toString());
-        System.out.println(state.calculateBest(4));
-        state.move(state.calculateBest(4));
+        Assert.assertEquals("e1-d1", state.calculateBest(2).toString());
+        System.out.println(state.calculateBest(2));
+        state.move(state.calculateBest(2));
         state.printCurrentBoard();
-        state.move(state.calculateBest(4));
+        state.move(state.calculateBest(2));
         state.printCurrentBoard();
     }
 

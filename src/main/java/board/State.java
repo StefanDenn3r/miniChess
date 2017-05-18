@@ -26,6 +26,7 @@ public class State {
     private Color sideOnMove;
     public boolean gameOver = false;
     public Color winner;
+    public static Color staticSideOnMove;
 
     public State() {
         getInitialState();
@@ -97,6 +98,7 @@ public class State {
 
 
     public Move calculateBest(int depth) {
+        staticSideOnMove = this.sideOnMove;
         List<Move> moves = this.generateMoveList();
         List<Move> bestMoves = new ArrayList<Move>();
         Integer bestScore = MAX_VALUE;
@@ -121,7 +123,7 @@ public class State {
         tmpState.sideOnMove = state.sideOnMove;
         tmpState.move(move);
 
-        if (depth == 0 || tmpState.winner != null) {
+        if (depth == 0 || tmpState.winner != null && tmpState.winner.equals(staticSideOnMove)) {
             return tmpState.pointScore();
         }
         Integer bestValue = MIN_VALUE;
