@@ -241,7 +241,7 @@ public class StateTest {
         state.getBoard().setField(field);
         state.printCurrentBoard();
         state.move("b5-a6");
-        //White wins
+        Assert.assertEquals(Color.WHITE, state.winner);
     }
 
     @Test
@@ -257,6 +257,7 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
+        Assert.assertEquals("e1-d1", state.calculateBest(2));
         System.out.println(state.calculateBest(2));
         state.move(state.calculateBest(2));
         state.printCurrentBoard();
