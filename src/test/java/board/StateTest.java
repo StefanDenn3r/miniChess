@@ -248,12 +248,48 @@ public class StateTest {
     public void testRescueKingFromCapture(){
         State state = new State();
         char[][] field = {
-                {'.', '.', 'R', '.', 'K'},
-                {'.', 'p', 'P', 'P', '.'},
+                {'.', '.', 'Q', '.', 'K'},
+                {'.', '.', 'P', 'P', '.'},
                 {'.', '.', '.', '.', '.'},
                 {'.', '.', '.', '.', '.'},
+                {'.', 'p', 'p', '.', '.'},
+                {'k', '.', '.', '.', 'q'}
+        };
+        state.getBoard().setField(field);
+        state.printCurrentBoard();
+        System.out.println(state.calculateBest(2));
+        state.move(state.calculateBest(2));
+        state.printCurrentBoard();
+        state.move(state.calculateBest(2));
+        state.printCurrentBoard();
+    }
+
+    @Test
+    public void testCaptureEnemy() {
+        State state = new State();
+        char[][] field = {
+                {'R', 'N', 'B', 'Q', 'K'},
+                {'P', 'P', 'P', 'P', 'P'},
+                {'.', '.', 'p', '.', '.'},
                 {'.', '.', '.', '.', '.'},
-                {'k', 'R', 'q', 'n', 'q'}
+                {'p', 'p', '.', 'p', 'p'},
+                {'k', 'q', 'b', 'n', 'r'}
+        };
+        state.getBoard().setField(field);
+        state.printCurrentBoard();
+        Assert.assertEquals("b1-c3", state.calculateBest(2).toString());
+    }
+
+    @Test
+    public void testRescueQueenFromCapture(){
+        State state = new State();
+        char[][] field = {
+                {'.', '.', '.', '.', 'K'},
+                {'.', '.', 'P', 'P', '.'},
+                {'.', '.', '.', '.', '.'},
+                {'.', '.', 'Q', '.', '.'},
+                {'.', 'p', 'p', '.', '.'},
+                {'k', '.', 'q', '.', '.'}
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
