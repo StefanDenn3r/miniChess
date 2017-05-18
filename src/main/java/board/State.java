@@ -16,6 +16,7 @@ import static java.lang.Character.toUpperCase;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Integer.MIN_VALUE;
 import static java.lang.Math.max;
+import static java.lang.Math.random;
 import static org.apache.commons.lang3.StringUtils.split;
 
 public class State {
@@ -49,13 +50,10 @@ public class State {
         if (toUpperCase(board.getPiece(move.getToSquare().getX(), move.getToSquare().getY())) == 'K') {
             gameOver = true;
             winner = sideOnMove;
-            return null;
-        }
-        if (moves >= 40) {
+        } else  if (moves >= 40) {
             printCurrentBoard();
             gameOver = true;
             System.out.println("Game ends in draw");
-            return null;
         }
         moveIsValid(move);
 
@@ -100,27 +98,33 @@ public class State {
 
     public Move calculateBest(int depth) {
         List<Move> moves = this.generateMoveList();
-        Move bestMove = null;
+        List<Move> bestMoves = new ArrayList<Move>();
         Integer bestScore = MAX_VALUE;
         for (Move move : moves) {
             int tmpScore = negamax(this, depth, move);
-            if (bestScore > tmpScore) {
-                bestMove = move;
+            if (bestScore >= tmpScore) {
+                if (bestScore == tmpScore)
+                    bestMoves.add(move);
+                else {
+                    bestMoves.clear();
+                    bestMoves.add(move);
+                }
                 bestScore = tmpScore;
             }
         }
-        return bestMove;
+        return bestMoves.get((int) (bestMoves.size() * random()));
     }
 
     private int negamax(State state, int depth, Move move) {
-        if (depth == 0){
-            return state.pointScore();
-        }
-        Integer bestValue = MIN_VALUE;
         State tmpState = new State();
         tmpState.board.setField(state.board.deepCopyField(state.board.getField()));
         tmpState.sideOnMove = state.sideOnMove;
         tmpState.move(move);
+
+        if (depth == 0 || tmpState.winner != null) {
+            return tmpState.pointScore();
+        }
+        Integer bestValue = MIN_VALUE;
         for (Move tmpMove : tmpState.generateMoveList()) {
             int v = -negamax(tmpState, depth - 1, tmpMove);
             bestValue = max(bestValue, v);

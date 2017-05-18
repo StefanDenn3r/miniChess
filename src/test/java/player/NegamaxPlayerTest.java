@@ -12,9 +12,9 @@ public class NegamaxPlayerTest {
     public void play() throws Exception {
         int whiteWins = 0;
         int blackWins = 0;
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 20; i++) {
             State state = new State();
-            Player[] players = {new NegamaxPlayer(6), new NegamaxPlayer(2)};
+            Player[] players = {new NegamaxPlayer(4), new HeuristicPlayer()};
             while (!state.gameOver) {
                 state.printCurrentBoard();
                 players[0].move(state);
@@ -30,5 +30,6 @@ public class NegamaxPlayerTest {
             if (state.winner == BLACK)
                 blackWins++;
         }
+        System.out.println("w: " + whiteWins + ", b: " + blackWins);
     }
 }
