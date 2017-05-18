@@ -210,7 +210,7 @@ public class StateTest {
     }
 
     @Test
-    public void testCalculateBestMove() {
+    public void testCalculateBestMove() throws InterruptedException {
         State state = new State();
         char[][] field = {
                 {'.', '.', 'B', 'Q', 'K'},
@@ -228,7 +228,7 @@ public class StateTest {
     }
 
     @Test
-    public void testCalculateBestMove1() {
+    public void testCalculateBestMove1() throws InterruptedException {
         State state = new State();
         char[][] field = {
                 {'.', '.', '.', '.', '.'},
@@ -263,7 +263,7 @@ public class StateTest {
     }
 
     @Test
-    public void testRescueKingFromCapture() {
+    public void testRescueKingFromCapture() throws InterruptedException {
         State state = new State();
         char[][] field = {
                 {'.', '.', '.', '.', 'K'},
@@ -284,7 +284,27 @@ public class StateTest {
     }
 
     @Test
-    public void testCaptureEnemy() {
+    public void testCaptureKing() throws InterruptedException {
+        State state = new State();
+        char[][] field = {
+                {'Q', '.', '.', '.', 'K'},
+                {'.', '.', 'P', 'P', '.'},
+                {'.', '.', '.', '.', '.'},
+                {'.', '.', '.', '.', '.'},
+                {'.', 'p', 'p', '.', '.'},
+                {'k', '.', '.', '.', 'q'}
+        };
+        state.getBoard().setField(field);
+        state.printCurrentBoard();
+        System.out.println(state.calculateBest(0));
+        state.move(state.calculateBest(0));
+        state.printCurrentBoard();
+        state.move(state.calculateBest(0));
+        state.printCurrentBoard();
+    }
+
+    @Test
+    public void testCaptureEnemy() throws InterruptedException {
         State state = new State();
         char[][] field = {
                 {'R', '.', 'B', 'Q', 'K'},
@@ -300,7 +320,7 @@ public class StateTest {
     }
 
     @Test
-    public void testRescueQueenFromCapture() {
+    public void testRescueQueenFromCapture() throws InterruptedException {
         State state = new State();
         char[][] field = {
                 {'.', '.', '.', '.', 'K'},
@@ -318,7 +338,7 @@ public class StateTest {
     }
 
     @Test
-    public void testPromoteToQueenAsBestMove() {
+    public void testPromoteToQueenAsBestMove() throws InterruptedException {
         State state = new State();
         char[][] field = {
                 {'.', '.', '.', '.', 'K'},

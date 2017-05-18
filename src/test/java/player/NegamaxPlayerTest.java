@@ -14,7 +14,7 @@ public class NegamaxPlayerTest {
         int blackWins = 0;
         for (int i = 0; i < 10; i++) {
             State state = new State();
-            Player[] players = {new NegamaxPlayer(4), new NegamaxPlayer(2)};
+            Player[] players = {new NegamaxPlayer(4), new NegamaxPlayer(-1)};
             while (!state.gameOver) {
                 state.printCurrentBoard();
                 players[0].move(state);

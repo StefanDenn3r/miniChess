@@ -13,7 +13,15 @@ public class NegamaxPlayer extends Player {
     }
 
     public Move move(State state) {
-        final Move move = state.calculateBest(depth);
+        Move move = null;
+        try {
+            if (depth >= 0)
+                move = state.calculateBest(depth);
+            else
+                move = state.iterativeDeepening();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return state.move(move);
     }
 }
