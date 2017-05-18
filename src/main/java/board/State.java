@@ -41,6 +41,7 @@ public class State {
         moves = 1;
         sideOnMove = WHITE;
         board = new Board();
+        timeLimit = 5000;
     }
 
     public void printCurrentBoard() {
@@ -125,7 +126,7 @@ public class State {
         List<Move> bestMoves = new ArrayList<Move>();
         Integer bestScore = MAX_VALUE;
         for (Move move : moves) {
-            int tmpScore = negamax(this, depth, move);
+            int tmpScore = abPruning(this, depth, MIN_VALUE, MAX_VALUE);
             if (bestScore >= tmpScore) {
                 if (bestScore == tmpScore)
                     bestMoves.add(move);
@@ -137,6 +138,27 @@ public class State {
             }
         }
         return bestMoves.get((int) (bestMoves.size() * random()));
+    }
+
+    public int abPruning(State state, int depth, int a, int b) {
+        if (depth == 0) {
+            return state.pointScore();
+        }
+        int s;
+        int bestScore = MIN_VALUE;
+        for (Move move : state.generateMoveList()) {
+            State tmpState = new State();
+            tmpState.board.setField(state.board.deepCopyField(state.board.getField()));
+            tmpState.sideOnMove = state.sideOnMove;
+            tmpState.move(move);
+            if (tmpState.winner != null && tmpState.winner.equals(staticSideOnMove)) {
+                s = tmpState.pointScore();
+            } else s = -abPruning(tmpState, depth - 1, -b, -a);
+            if (s >= b) return s;
+            if (s > a) a = s;
+            if (s > bestScore) bestScore = s;
+        }
+        return bestScore;
     }
 
     private int negamax(State state, int depth, Move move) throws InterruptedException {
