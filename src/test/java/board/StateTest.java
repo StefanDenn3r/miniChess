@@ -262,7 +262,7 @@ public class StateTest {
         Assert.assertEquals(Color.WHITE, state.winner);
     }
 
-    //@Test
+    @Test
     public void testRescueKingFromCapture() {
         State state = new State();
         char[][] field = {
@@ -275,11 +275,11 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        Assert.assertEquals("e1-d1", state.calculateBest(0));
-        System.out.println(state.calculateBest(1));
-        state.move(state.calculateBest(1));
+        Assert.assertEquals("e1-d1", state.calculateBest(4).toString());
+        System.out.println(state.calculateBest(4));
+        state.move(state.calculateBest(4));
         state.printCurrentBoard();
-        state.move(state.calculateBest(1));
+        state.move(state.calculateBest(4));
         state.printCurrentBoard();
     }
 
@@ -316,4 +316,26 @@ public class StateTest {
         state.calculateBest(2);
         state.printCurrentBoard();
     }
+
+    @Test
+    public void testPromoteToQueenAsBestMove() {
+        State state = new State();
+        char[][] field = {
+                {'.', '.', '.', '.', 'K'},
+                {'.', '.', '.', '.', '.'},
+                {'.', '.', '.', '.', '.'},
+                {'.', '.', '.', '.', '.'},
+                {'.', '.', 'P', '.', '.'},
+                {'k', '.', '.', '.', '.'}
+        };
+        state.getBoard().setField(field);
+        state.printCurrentBoard();
+        Assert.assertEquals("c5-c6", state.calculateBest(4).toString());
+        state.move(state.calculateBest(4));
+        state.printCurrentBoard();
+
+
+    }
+
+
 }
