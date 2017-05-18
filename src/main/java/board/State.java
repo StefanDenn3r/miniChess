@@ -104,15 +104,15 @@ public class State {
     }
 
     public Move iterativeDeepening() {
-        if (moves <= 4){
-            timeLimit = 5000;
-        } else if(moves <= 12){
-            timeLimit = 8000;
-        } else if(moves <= 30){
-            timeLimit = 12000;
-        } else if(moves <= 40){
-            timeLimit = 5000;
-        }
+//        if (moves <= 4){
+//            timeLimit = 5000;
+//        } else if(moves <= 12){
+//            timeLimit = 8000;
+//        } else if(moves <= 30){
+//            timeLimit = 12000;
+//        } else if(moves <= 40){
+//            timeLimit = 5000;
+//        }
         int depth = 4;
         Move m = calculateBestMove();
         while (true) {
@@ -131,6 +131,7 @@ public class State {
 
     public Move calculateBest(int depth) throws InterruptedException {
         staticSideOnMove = this.sideOnMove;
+        timeLimit = 6000;
         List<Move> moves = this.generateMoveList();
         List<Move> bestMoves = new ArrayList<Move>();
         Integer bestScore = MAX_VALUE;
@@ -149,7 +150,16 @@ public class State {
         return bestMoves.get((int) (bestMoves.size() * random()));
     }
 
-    public int abPruning(State state, int depth, int a, int b) {
+    public int abPruning(State state, int depth, int a, int b) throws InterruptedException {
+        if (iterator == 0) {
+            startTime = System.currentTimeMillis();
+        }
+        if (iterator % 10000 == 0) {
+            if (System.currentTimeMillis() - startTime >= timeLimit)
+                throw new InterruptedException("time is over");
+        }
+        iterator++;
+
         if (depth == 0) {
             return state.pointScore();
         }
@@ -171,14 +181,6 @@ public class State {
     }
 
     private int negamax(State state, int depth, Move move) throws InterruptedException {
-        if (iterator == 0) {
-            startTime = System.currentTimeMillis();
-        }
-        if (iterator % 10000 == 0) {
-            if (System.currentTimeMillis() - startTime >= timeLimit)
-                throw new InterruptedException("time is over");
-        }
-        iterator++;
         State tmpState = new State();
         tmpState.board.setField(state.board.deepCopyField(state.board.getField()));
         tmpState.sideOnMove = state.sideOnMove;
