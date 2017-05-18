@@ -164,7 +164,7 @@ public class StateTest {
         state.getBoard().setField(field);
         List<Move> moves = new ArrayList<Move>();
         state.generateMoveListForPiece(moves, 1, 3);
-        Assert.assertEquals(0, moves.size());
+        assertEquals(0, moves.size());
     }
 
     @Test
@@ -189,7 +189,7 @@ public class StateTest {
     @Test
     public void testCalculateInitialScore() {
         State state = new State();
-        Assert.assertEquals(0, state.pointScore());
+        assertEquals(0, state.pointScore());
     }
 
     @Test
@@ -204,9 +204,9 @@ public class StateTest {
                 {'k', 'q', 'b', 'n', 'r'}
         };
         state.getBoard().setField(field);
-        Assert.assertEquals(-100, state.pointScore());
+        assertEquals(-100, state.pointScore());
         state.move("c2-c3");
-        Assert.assertEquals(100, state.pointScore());
+        assertEquals(100, state.pointScore());
     }
 
     @Test
@@ -222,8 +222,8 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        System.out.println(state.calculateBest(1));
-        state.move(state.calculateBest(1));
+        assertEquals(state.iterativeDeepening().toString(), "b6-a6");
+        state.move(state.iterativeDeepening());
         state.printCurrentBoard();
     }
 
@@ -240,8 +240,8 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        System.out.println(state.calculateBest(1));
-        state.move(state.calculateBest(1));
+        assertEquals(state.iterativeDeepening().toString(), "b6-a6");
+        state.move(state.iterativeDeepening());
         state.printCurrentBoard();
     }
 
@@ -259,7 +259,7 @@ public class StateTest {
         state.getBoard().setField(field);
         state.printCurrentBoard();
         state.move("b5-a6");
-        Assert.assertEquals(Color.WHITE, state.winner);
+        assertEquals(Color.WHITE, state.winner);
     }
 
     @Test
@@ -275,11 +275,11 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        Assert.assertEquals("e1-d1", state.calculateBest(2).toString());
-        System.out.println(state.calculateBest(2));
-        state.move(state.calculateBest(2));
+        assertEquals("e1-d1", state.iterativeDeepening().toString());
+        System.out.println(state.iterativeDeepening());
+        state.move(state.iterativeDeepening());
         state.printCurrentBoard();
-        state.move(state.calculateBest(2));
+        state.move(state.iterativeDeepening());
         state.printCurrentBoard();
     }
 
@@ -296,10 +296,8 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        System.out.println(state.calculateBest(0));
-        state.move(state.calculateBest(0));
-        state.printCurrentBoard();
-        state.move(state.calculateBest(0));
+        assertEquals("a1-a6", state.iterativeDeepening().toString());
+        state.move(state.iterativeDeepening());
         state.printCurrentBoard();
     }
 
@@ -316,7 +314,7 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        Assert.assertEquals("b2-c3", state.calculateBest(1).toString());
+        assertEquals("b2-c3", state.calculateBest(4).toString());
     }
 
     @Test
@@ -332,8 +330,8 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        System.out.println(state.calculateBest(2));
-        state.calculateBest(2);
+        Assert.assertTrue(state.iterativeDeepening().toString().contains("c4-"));
+        System.out.println(state.iterativeDeepening());
         state.printCurrentBoard();
     }
 
@@ -350,12 +348,26 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        Assert.assertEquals("c5-c6", state.calculateBest(4).toString());
-        state.move(state.calculateBest(4));
+        assertEquals("c5-c6", state.iterativeDeepening().toString());
+        state.move(state.iterativeDeepening());
         state.printCurrentBoard();
-
-
     }
 
-
+    @Test
+    public void testSecondChildValue() throws InterruptedException {
+        State state = new State();
+        char[][] field = {
+                {'.', '.', '.', '.', 'K'},
+                {'.', '.', '.', 'r', '.'},
+                {'P', '.', 'p', '.', '.'},
+                {'.', '.', '.', '.', '.'},
+                {'.', '.', '.', '.', '.'},
+                {'k', '.', '.', '.', '.'}
+        };
+        state.getBoard().setField(field);
+        state.printCurrentBoard();
+        Assert.assertNotEquals("e1-d2", state.iterativeDeepening().toString());
+        state.move(state.iterativeDeepening());
+        state.printCurrentBoard();
+    }
 }

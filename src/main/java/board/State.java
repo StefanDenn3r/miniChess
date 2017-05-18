@@ -26,7 +26,6 @@ public class State {
     private Color sideOnMove;
     public boolean gameOver = false;
     public Color winner;
-    private boolean isDraw;
     private static long startTime;
     public static long timeLimit;
     public static int iterator = 0;
@@ -41,6 +40,7 @@ public class State {
         moves = 1;
         sideOnMove = WHITE;
         board = new Board();
+        timeLimit = 6000;
     }
 
     public void printCurrentBoard() {
@@ -59,7 +59,6 @@ public class State {
         } else if (moves >= 40) {
             printCurrentBoard();
             gameOver = true;
-            isDraw = true;
             System.out.println("Game ends in draw");
         }
         moveIsValid(move);
@@ -108,7 +107,7 @@ public class State {
         while (true) {
             Move tmpMove;
             try {
-                tmpMove = calculateBest(depth);
+                tmpMove = calculateBestWithAb(depth);
             } catch (InterruptedException e) {
                 System.out.println(depth);
                 iterator = 0;
@@ -139,6 +138,57 @@ public class State {
         return bestMoves.get((int) (bestMoves.size() * random()));
     }
 
+    public Move calculateBestWithAb(int depth) throws InterruptedException {
+        staticSideOnMove = this.sideOnMove;
+        List<Move> moves = this.generateMoveList();
+        List<Move> bestMoves = new ArrayList<Move>();
+        Integer bestScore = MIN_VALUE;
+        for (Move move : moves) {
+            int tmpScore = abPruning(this, move, depth, MIN_VALUE, MAX_VALUE);
+            if (bestScore <= tmpScore) {
+                if (bestScore == tmpScore)
+                    bestMoves.add(move);
+                else {
+                    bestMoves.clear();
+                    bestMoves.add(move);
+                }
+                bestScore = tmpScore;
+            }
+        }
+        return bestMoves.get((int) (bestMoves.size() * random()));
+    }
+
+    private int abPruning(State state, Move move, int depth, int a, int b) throws InterruptedException {
+        if (iterator == 0) {
+            startTime = System.currentTimeMillis();
+        }
+        if (iterator % 10000 == 0) {
+            if (System.currentTimeMillis() - startTime >= timeLimit)
+                throw new InterruptedException("time is over");
+        }
+        iterator++;
+        State tmpState = new State();
+        tmpState.board.setField(state.board.deepCopyField(state.board.getField()));
+        tmpState.sideOnMove = state.sideOnMove;
+        tmpState.move(move);
+
+        int bestScore = MIN_VALUE;
+
+        final List<Move> moveList = tmpState.generateMoveList();
+        if (depth == 0 || moveList == null || tmpState.winner != null && tmpState.winner.equals(staticSideOnMove)) {
+            return tmpState.pointScore();
+        }
+
+        for (Move tmpMove : moveList) {
+            int tmpBestScore = -abPruning(tmpState, tmpMove, depth - 1, -b, -a);
+            bestScore = max(tmpBestScore, bestScore);
+            a = max(a, tmpBestScore);
+            if (a >= b)
+                break;
+        }
+        return bestScore;
+    }
+
     private int negamax(State state, int depth, Move move) throws InterruptedException {
         if (iterator == 0) {
             startTime = System.currentTimeMillis();
@@ -153,7 +203,7 @@ public class State {
         tmpState.sideOnMove = state.sideOnMove;
         tmpState.move(move);
 
-        if (depth == 0 || tmpState.winner != null && tmpState.winner.equals(staticSideOnMove)) {
+        if (depth == 0 || tmpState.generateMoveList() == null || tmpState.winner != null && tmpState.winner.equals(staticSideOnMove)) {
             return tmpState.pointScore();
         }
         Integer bestValue = MIN_VALUE;
@@ -168,7 +218,7 @@ public class State {
     public Move calculateBestMove() {
         List<Move> moves = generateMoveList();
         Move bestMove = null;
-        int bestScore = 100000;
+        int bestScore = MAX_VALUE;
         if (moves != null) {
             for (Move move : moves) {
                 State tmpState = new State();
@@ -197,7 +247,6 @@ public class State {
             }
         }
         if (moves.isEmpty()) {
-            System.out.println(this.getSideOnMove() + " is unable to move.");
             return null;
         }
         return moves;

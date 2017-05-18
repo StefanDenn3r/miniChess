@@ -31,7 +31,7 @@ public class Client {
 
     public static void main(String[] args) throws IOException {
         char color = 'w';
-        String gameID = "14531";
+        String gameID = "14657";
         State state = new State();
         Client client = new Client("imcs.svcs.cs.pdx.edu", "3589", "win_ner", "halloandi");
         //try {
