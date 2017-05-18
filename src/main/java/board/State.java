@@ -104,6 +104,15 @@ public class State {
     }
 
     public Move iterativeDeepening() {
+        if (moves <= 4){
+            timeLimit = 5000;
+        } else if(moves <= 12){
+            timeLimit = 8000;
+        } else if(moves <= 30){
+            timeLimit = 12000;
+        } else if(moves <= 40){
+            timeLimit = 5000;
+        }
         int depth = 4;
         Move m = calculateBestMove();
         while (true) {
