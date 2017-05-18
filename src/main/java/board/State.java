@@ -41,7 +41,7 @@ public class State {
         moves = 1;
         sideOnMove = WHITE;
         board = new Board();
-        timeLimit = 5000;
+        timeLimit = 3000;
     }
 
     public void printCurrentBoard() {
@@ -113,7 +113,8 @@ public class State {
 //        } else if(moves <= 40){
 //            timeLimit = 5000;
 //        }
-        int depth = 4;
+        //TODO: UMBEDINGT ÄNDERN!
+        int depth = 6;
         Move m = calculateBestMove();
         while (true) {
             Move tmpMove;
@@ -131,13 +132,11 @@ public class State {
 
     public Move calculateBest(int depth) throws InterruptedException {
         staticSideOnMove = this.sideOnMove;
-        timeLimit = 6000;
-        List<Move> moves = this.generateMoveList();
         List<Move> bestMoves = new ArrayList<Move>();
-        Integer bestScore = MAX_VALUE;
-        for (Move move : moves) {
-            int tmpScore = abPruning(this, depth, MIN_VALUE, MAX_VALUE);
-            if (bestScore >= tmpScore) {
+        Integer bestScore = MIN_VALUE;
+        for (Move move : this.generateMoveList()) {
+            int tmpScore = -abPruning(this, depth, move, MIN_VALUE, MAX_VALUE);
+            if (bestScore <= tmpScore) {
                 if (bestScore == tmpScore)
                     bestMoves.add(move);
                 else {
@@ -150,7 +149,7 @@ public class State {
         return bestMoves.get((int) (bestMoves.size() * random()));
     }
 
-    public int abPruning(State state, int depth, int a, int b) throws InterruptedException {
+    public int abPruning(State state, int depth, Move move, int a, int b) throws InterruptedException {
         if (iterator == 0) {
             startTime = System.currentTimeMillis();
         }
@@ -160,19 +159,20 @@ public class State {
         }
         iterator++;
 
-        if (depth == 0) {
-            return state.pointScore();
+        State tmpState = new State();
+        tmpState.board.setField(state.board.deepCopyField(state.board.getField()));
+        tmpState.sideOnMove = state.sideOnMove;
+        tmpState.move(move);
+        List<Move> generatedMoveList = tmpState.generateMoveList();
+        if (depth == 0 || tmpState.winner != null || generatedMoveList == null) {
+            return tmpState.pointScore();
         }
         int s;
         int bestScore = MIN_VALUE;
-        for (Move move : state.generateMoveList()) {
-            State tmpState = new State();
-            tmpState.board.setField(state.board.deepCopyField(state.board.getField()));
-            tmpState.sideOnMove = state.sideOnMove;
-            tmpState.move(move);
-            if (tmpState.winner != null && tmpState.winner.equals(staticSideOnMove)) {
+        for (Move tmpMove : generatedMoveList) {
+            if (tmpState.winner != null) {
                 s = tmpState.pointScore();
-            } else s = -abPruning(tmpState, depth - 1, -b, -a);
+            } else s = -abPruning(tmpState, depth - 1, tmpMove, -b, -a);
             if (s >= b) return s;
             if (s > a) a = s;
             if (s > bestScore) bestScore = s;
@@ -201,7 +201,7 @@ public class State {
     public Move calculateBestMove() {
         List<Move> moves = generateMoveList();
         Move bestMove = null;
-        int bestScore = 100000;
+        int bestScore = MIN_VALUE;
         if (moves != null) {
             for (Move move : moves) {
                 State tmpState = new State();
@@ -212,7 +212,7 @@ public class State {
                 }
                 tmpState.move(move);
                 int tmpScore = tmpState.pointScore();
-                if (bestScore > tmpScore) {
+                if (bestScore < tmpScore) {
                     bestMove = move;
                     bestScore = tmpScore;
                 }
@@ -230,7 +230,6 @@ public class State {
             }
         }
         if (moves.isEmpty()) {
-            System.out.println(this.getSideOnMove() + " is unable to move.");
             return null;
         }
         return moves;

@@ -275,11 +275,11 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        Assert.assertEquals("e1-d1", state.calculateBest(2).toString());
-        System.out.println(state.calculateBest(2));
-        state.move(state.calculateBest(2));
+        Assert.assertEquals("e1-d1", state.iterativeDeepening().toString());
+        System.out.println(state.iterativeDeepening());
+        state.move(state.iterativeDeepening());
         state.printCurrentBoard();
-        state.move(state.calculateBest(2));
+        state.move(state.iterativeDeepening());
         state.printCurrentBoard();
     }
 
@@ -296,10 +296,10 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        System.out.println(state.calculateBest(0));
-        state.move(state.calculateBest(0));
+        System.out.println(state.iterativeDeepening());
+        state.move(state.iterativeDeepening());
         state.printCurrentBoard();
-        state.move(state.calculateBest(0));
+        state.move(state.iterativeDeepening());
         state.printCurrentBoard();
     }
 
@@ -316,7 +316,7 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        Assert.assertEquals("b2-c3", state.calculateBest(1).toString());
+        Assert.assertEquals("b2-c3", state.iterativeDeepening().toString());
     }
 
     @Test
@@ -332,8 +332,8 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        System.out.println(state.calculateBest(2));
-        state.calculateBest(2);
+        System.out.println(state.iterativeDeepening());
+        state.iterativeDeepening();
         state.printCurrentBoard();
     }
 
@@ -350,8 +350,8 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        Assert.assertEquals("c5-c6", state.calculateBest(4).toString());
-        state.move(state.calculateBest(4));
+        Assert.assertEquals("c5-c6", state.iterativeDeepening().toString());
+        state.move(state.iterativeDeepening());
         state.printCurrentBoard();
 
 

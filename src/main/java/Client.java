@@ -30,12 +30,12 @@ public class Client {
     String sendLineEnding = "\r\n";
 
     public static void main(String[] args) throws IOException {
-        char color = 'b';
-        String gameID = "14405";
+        char color = 'w';
+        String gameID = "14589";
         State state = new State();
         Client client = new Client("imcs.svcs.cs.pdx.edu", "3589", "win_ner", "halloandi");
         //try {
-        /*acceptGame(color, gameID, state, client);*/
+        //acceptGame(color, gameID, state, client);
         offerGame(color, state, client);
         //} catch (Exception e) {
         //}
@@ -60,7 +60,7 @@ public class Client {
     }
 
     private static void interact(char color, State state, Client client) throws IOException {
-        NegamaxPlayer player = new NegamaxPlayer(4);
+        NegamaxPlayer player = new NegamaxPlayer(-1);
         String move = "";
         while (move != null) {
             if (color == 'w') {
