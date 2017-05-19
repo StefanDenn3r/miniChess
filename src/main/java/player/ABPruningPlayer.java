@@ -10,5 +10,4 @@ public class ABPruningPlayer extends Player {
         Move move = state.calculateBestWithABPruning();
         return state.move(move);
     }
-
 }

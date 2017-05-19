@@ -1,7 +1,16 @@
 package board;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import static board.Board.deepCopyField;
 import static board.Capture.FALSE;
@@ -120,20 +129,49 @@ public class State {
     }
 
     public Move calculateBestWithNegamax(int depth) {
+        final int depthForThread = depth;
+        final State stateForThread = this;
         staticSideOnMove = this.sideOnMove;
         List<Move> moves = this.generateMoveList();
         List<Move> bestMoves = new ArrayList<Move>();
         Integer bestScore = MAX_VALUE;
+        ExecutorService service = Executors.newCachedThreadPool();
+        Map<Move, Future<Integer>> results = new HashMap<Move, Future<Integer>>();
         for (Move move : moves) {
-            int tmpScore = negamax(this, depth, move);
-            if (bestScore >= tmpScore) {
-                if (bestScore == tmpScore)
-                    bestMoves.add(move);
-                else {
-                    bestMoves.clear();
-                    bestMoves.add(move);
+            final Move moveForThread = move;
+            results.put(moveForThread, service.submit(new Callable<Integer>() {
+                                                          public Integer call() throws Exception {
+                                                              return negamax(stateForThread, depthForThread, moveForThread);
+                                                          }
+                                                      }
+            ));
+        }
+
+        int counter = results.size() - 1;
+        while (counter >= 0) {
+            Map<Move, Future<Integer>> copy = new HashMap<Move, Future<Integer>>(results);
+            for (Map.Entry<Move, Future<Integer>> value : copy.entrySet()) {
+                if (results.get(value.getKey()).isDone()) {
+                    Integer tmpScore = null;
+                    try {
+                        tmpScore = results.get(value.getKey()).get();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (bestScore >= tmpScore) {
+                        if (bestScore.compareTo(tmpScore) == 0)
+                            bestMoves.add(value.getKey());
+                        else {
+                            bestMoves.clear();
+                            bestMoves.add(value.getKey());
+                        }
+                        bestScore = tmpScore;
+                    }
+                    counter = counter - 1;
+                    results.remove(value.getKey());
                 }
-                bestScore = tmpScore;
             }
         }
         return bestMoves.get((int) (bestMoves.size() * random()));
@@ -191,7 +229,7 @@ public class State {
         return bestScore;
     }
 
-    private int negamax(State state, int depth, Move move) {
+    private Integer negamax(State state, int depth, Move move) {
         State tmpState = new State();
         tmpState.board.setField(deepCopyField(state.board.getField()));
         tmpState.sideOnMove = state.sideOnMove;
