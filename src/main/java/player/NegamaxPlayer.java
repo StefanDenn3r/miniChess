@@ -1,7 +1,7 @@
 package player;
 
-import board.Move;
-import board.State;
+        import board.Move;
+        import board.State;
 
 public class NegamaxPlayer extends Player {
 
@@ -13,15 +13,7 @@ public class NegamaxPlayer extends Player {
     }
 
     public Move move(State state) {
-        Move move = null;
-        try {
-            if (depth >= 0)
-                move = state.calculateBest(depth);
-            else
-                move = state.iterativeDeepening();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Move move = state.calculateBestWithNegamax(depth);
         return state.move(move);
     }
 }

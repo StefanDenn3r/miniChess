@@ -101,7 +101,7 @@ public class State {
         throw new IllegalArgumentException("Move is invalid");
     }
 
-    public Move iterativeDeepening() {
+    public Move calculateBestWithABPruning() {
         int depth = 4;
         Move m = calculateBestMove();
         while (true) {
@@ -118,7 +118,7 @@ public class State {
         }
     }
 
-    public Move calculateBest(int depth) throws InterruptedException {
+    public Move calculateBestWithNegamax(int depth) {
         staticSideOnMove = this.sideOnMove;
         List<Move> moves = this.generateMoveList();
         List<Move> bestMoves = new ArrayList<Move>();
@@ -190,15 +190,7 @@ public class State {
         return bestScore;
     }
 
-    private int negamax(State state, int depth, Move move) throws InterruptedException {
-        if (iterator == 0) {
-            startTime = System.currentTimeMillis();
-        }
-        if (iterator % 10000 == 0) {
-            if (System.currentTimeMillis() - startTime >= timeLimit)
-                throw new InterruptedException("time is over");
-        }
-        iterator++;
+    private int negamax(State state, int depth, Move move) {
         State tmpState = new State();
         tmpState.board.setField(state.board.deepCopyField(state.board.getField()));
         tmpState.sideOnMove = state.sideOnMove;

@@ -222,8 +222,8 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        assertEquals("b6-a6", state.iterativeDeepening().toString());
-        state.move(state.iterativeDeepening());
+        assertEquals("b6-a6", state.calculateBestWithABPruning().toString());
+        state.move(state.calculateBestWithABPruning());
         state.printCurrentBoard();
     }
 
@@ -240,9 +240,9 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        assertEquals("b6-a6", state.iterativeDeepening().toString());
+        assertEquals("b6-a6", state.calculateBestWithABPruning().toString());
 /*
-        state.move(state.iterativeDeepening());
+        state.move(state.calculateBestWithABPruning());
 */
         state.printCurrentBoard();
     }
@@ -277,11 +277,11 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        assertEquals("e1-d1", state.iterativeDeepening().toString());
-        System.out.println(state.iterativeDeepening());
-        state.move(state.iterativeDeepening());
+        assertEquals("e1-d1", state.calculateBestWithABPruning().toString());
+        System.out.println(state.calculateBestWithABPruning());
+        state.move(state.calculateBestWithABPruning());
         state.printCurrentBoard();
-        state.move(state.iterativeDeepening());
+        state.move(state.calculateBestWithABPruning());
         state.printCurrentBoard();
     }
 
@@ -298,8 +298,8 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        assertEquals("a1-a6", state.iterativeDeepening().toString());
-        state.move(state.iterativeDeepening());
+        assertEquals("a1-a6", state.calculateBestWithABPruning().toString());
+        state.move(state.calculateBestWithABPruning());
         state.printCurrentBoard();
     }
 
@@ -316,7 +316,7 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        assertEquals("b2-c3", state.calculateBest(4).toString());
+        assertEquals("b2-c3", state.calculateBestWithNegamax(4).toString());
     }
 
     @Test
@@ -332,8 +332,8 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        Assert.assertTrue(state.iterativeDeepening().toString().contains("c4-"));
-        System.out.println(state.iterativeDeepening());
+        Assert.assertTrue(state.calculateBestWithABPruning().toString().contains("c4-"));
+        System.out.println(state.calculateBestWithABPruning());
         state.printCurrentBoard();
     }
 
@@ -350,8 +350,8 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        assertEquals("c5-c6", state.iterativeDeepening().toString());
-        state.move(state.iterativeDeepening());
+        assertEquals("c5-c6", state.calculateBestWithABPruning().toString());
+        state.move(state.calculateBestWithABPruning());
         state.printCurrentBoard();
     }
 
@@ -368,8 +368,8 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        Assert.assertNotEquals("e1-d2", state.iterativeDeepening().toString());
-        state.move(state.iterativeDeepening());
+        Assert.assertNotEquals("e1-d2", state.calculateBestWithABPruning().toString());
+        state.move(state.calculateBestWithABPruning());
         state.printCurrentBoard();
     }
 }

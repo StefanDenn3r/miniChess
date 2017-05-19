@@ -5,9 +5,9 @@ import board.State;
 
 public abstract class Player {
 
-    abstract Move move(State state);
+    abstract Move move(State state) throws InterruptedException;
 
-    public static void play(State state, Player[] players) {
+    public static void play(State state, Player[] players) throws InterruptedException {
         while (!state.gameOver) {
             state.printCurrentBoard();
             players[0].move(state);

@@ -35,8 +35,8 @@ public class Client {
         State state = new State();
         Client client = new Client("imcs.svcs.cs.pdx.edu", "3589", "win_ner", "halloandi");
         //try {
-        acceptGame(color, gameID, state, client);
-        //offerGame(color, state, client);
+        //acceptGame(color, gameID, state, client);
+        offerGame(color, state, client);
         //} catch (Exception e) {
         //}
     }
