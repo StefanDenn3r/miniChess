@@ -3,6 +3,7 @@
 // Please see the file COPYING at http://github.com/BartMassey/imcs
 
 import board.State;
+import player.ABPruningPlayer;
 import player.NegamaxPlayer;
 
 import java.io.*;
@@ -29,8 +30,8 @@ public class Client {
     private String sendLineEnding = "\r\n";
 
     public static void main(String[] args) throws IOException {
-        char color = 'w';
-        String gameID = "15456";
+        char color = 'b';
+        String gameID = "15563";
         State state = new State();
         Client client = new Client("imcs.svcs.cs.pdx.edu", "3589", "win_ner", "halloandi");
         //try {
