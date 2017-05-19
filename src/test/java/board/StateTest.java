@@ -222,7 +222,7 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        assertEquals(state.iterativeDeepening().toString(), "b6-a6");
+        assertEquals("b6-a6", state.iterativeDeepening().toString());
         state.move(state.iterativeDeepening());
         state.printCurrentBoard();
     }
@@ -231,7 +231,7 @@ public class StateTest {
     public void testCalculateBestMove1() throws InterruptedException {
         State state = new State();
         char[][] field = {
-                {'.', '.', '.', '.', '.'},
+                {'.', '.', '.', '.', 'K'},
                 {'.', '.', '.', '.', '.'},
                 {'.', '.', '.', '.', '.'},
                 {'.', '.', '.', '.', '.'},
@@ -240,8 +240,10 @@ public class StateTest {
         };
         state.getBoard().setField(field);
         state.printCurrentBoard();
-        assertEquals(state.iterativeDeepening().toString(), "b6-a6");
+        assertEquals("b6-a6", state.iterativeDeepening().toString());
+/*
         state.move(state.iterativeDeepening());
+*/
         state.printCurrentBoard();
     }
 

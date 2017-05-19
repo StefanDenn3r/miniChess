@@ -144,7 +144,8 @@ public class State {
         List<Move> bestMoves = new ArrayList<Move>();
         Integer bestScore = MIN_VALUE;
         for (Move move : moves) {
-            int tmpScore = abPruning(this, move, depth, MIN_VALUE, MAX_VALUE);
+            if (moveCapturesEnemyKing(move)) return move;
+            int tmpScore = abPruning(this, move, depth, MIN_VALUE, MAX_VALUE, -1);
             if (bestScore <= tmpScore) {
                 if (bestScore == tmpScore)
                     bestMoves.add(move);
@@ -158,7 +159,7 @@ public class State {
         return bestMoves.get((int) (bestMoves.size() * random()));
     }
 
-    private int abPruning(State state, Move move, int depth, int a, int b) throws InterruptedException {
+    private int abPruning(State state, Move move, int depth, int a, int b, int color) throws InterruptedException {
         if (iterator == 0) {
             startTime = System.currentTimeMillis();
         }
@@ -176,11 +177,11 @@ public class State {
 
         final List<Move> moveList = tmpState.generateMoveList();
         if (depth == 0 || moveList == null || tmpState.winner != null && tmpState.winner.equals(staticSideOnMove)) {
-            return tmpState.pointScore();
+            return tmpState.pointScore() * color;
         }
 
         for (Move tmpMove : moveList) {
-            int tmpBestScore = -abPruning(tmpState, tmpMove, depth - 1, -b, -a);
+            int tmpBestScore = -abPruning(tmpState, tmpMove, depth - 1, -b, -a, -color);
             bestScore = max(tmpBestScore, bestScore);
             a = max(a, tmpBestScore);
             if (a >= b)
@@ -420,5 +421,18 @@ public class State {
 
     public Color getSideOnMove() {
         return sideOnMove;
+    }
+
+    private boolean moveCapturesEnemyKing(Move move) {
+        if (staticSideOnMove.equals(Color.WHITE)) {
+            if (this.board.getPiece(move.getToSquare().getX(), move.getToSquare().getY()) == 'k') {
+                return true;
+            }
+        } else {
+            if (this.board.getPiece(move.getToSquare().getX(), move.getToSquare().getY()) == 'K') {
+                return true;
+            }
+        }
+        return false;
     }
 }

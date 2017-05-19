@@ -31,7 +31,7 @@ public class Client {
 
     public static void main(String[] args) throws IOException {
         char color = 'w';
-        String gameID = "14657";
+        String gameID = "15456";
         State state = new State();
         Client client = new Client("imcs.svcs.cs.pdx.edu", "3589", "win_ner", "halloandi");
         //try {
@@ -60,7 +60,7 @@ public class Client {
     }
 
     private static void interact(char color, State state, Client client) throws IOException {
-        NegamaxPlayer player = new NegamaxPlayer(-1);
+        NegamaxPlayer player = new NegamaxPlayer(5);
         String move = "";
         while (move != null) {
             if (color == 'w') {
