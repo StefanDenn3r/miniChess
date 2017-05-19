@@ -3,6 +3,7 @@ package board;
 import java.util.ArrayList;
 import java.util.List;
 
+import static board.Board.deepCopyField;
 import static board.Capture.FALSE;
 import static board.Capture.ONLY;
 import static board.Capture.TRUE;
@@ -27,9 +28,9 @@ public class State {
     public boolean gameOver = false;
     public Color winner;
     private static long startTime;
-    public static long timeLimit;
-    public static int iterator = 0;
-    public static Color staticSideOnMove;
+    private static long timeLimit;
+    private static int iterator = 0;
+    private static Color staticSideOnMove;
 
 
     public State() {
@@ -138,7 +139,7 @@ public class State {
         return bestMoves.get((int) (bestMoves.size() * random()));
     }
 
-    public Move calculateBestWithAb(int depth) throws InterruptedException {
+    private Move calculateBestWithAb(int depth) throws InterruptedException {
         staticSideOnMove = this.sideOnMove;
         List<Move> moves = this.generateMoveList();
         List<Move> bestMoves = new ArrayList<Move>();
@@ -169,7 +170,7 @@ public class State {
         }
         iterator++;
         State tmpState = new State();
-        tmpState.board.setField(state.board.deepCopyField(state.board.getField()));
+        tmpState.board.setField(deepCopyField(state.board.getField()));
         tmpState.sideOnMove = state.sideOnMove;
         tmpState.move(move);
 
@@ -192,7 +193,7 @@ public class State {
 
     private int negamax(State state, int depth, Move move) {
         State tmpState = new State();
-        tmpState.board.setField(state.board.deepCopyField(state.board.getField()));
+        tmpState.board.setField(deepCopyField(state.board.getField()));
         tmpState.sideOnMove = state.sideOnMove;
         tmpState.move(move);
 
@@ -215,7 +216,7 @@ public class State {
         if (moves != null) {
             for (Move move : moves) {
                 State tmpState = new State();
-                tmpState.board.setField(this.board.deepCopyField(this.board.getField()));
+                tmpState.board.setField(deepCopyField(this.board.getField()));
                 tmpState.sideOnMove = this.sideOnMove;
                 if (toUpperCase(tmpState.board.getPiece(move.getToSquare().getX(), move.getToSquare().getY())) == 'K') {
                     return move;
@@ -321,11 +322,6 @@ public class State {
         return board.getPiece(x, y) != '.';
     }
 
-    /**
-     * positiv = advantage for side on move
-     *
-     * @return
-     */
     int pointScore() {
         int score = 0;
         for (char[] row : board.getField()) {
@@ -405,14 +401,6 @@ public class State {
 
     public void setBoard(Board board) {
         this.board = board;
-    }
-
-    public int getMoves() {
-        return moves;
-    }
-
-    public Color getSideOnMove() {
-        return sideOnMove;
     }
 
     private boolean moveCapturesEnemyKing(Move move) {

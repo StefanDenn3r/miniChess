@@ -1,11 +1,11 @@
 package player;
 
-        import board.Move;
-        import board.State;
+import board.Move;
+import board.State;
 
 public class NegamaxPlayer extends Player {
 
-    int depth;
+    private int depth;
 
     public NegamaxPlayer(int depth) {
         super();

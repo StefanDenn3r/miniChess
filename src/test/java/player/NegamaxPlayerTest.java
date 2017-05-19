@@ -1,6 +1,5 @@
 package player;
 
-import board.Color;
 import board.State;
 import org.junit.Test;
 
@@ -15,14 +14,7 @@ public class NegamaxPlayerTest {
         for (int i = 0; i < 1; i++) {
             State state = new State();
             Player[] players = {new NegamaxPlayer(5), new ABPruningPlayer()};
-            while (!state.gameOver) {
-                state.printCurrentBoard();
-                players[0].move(state);
-                if (!state.gameOver) {
-                    state.printCurrentBoard();
-                    players[1].move(state);
-                }
-            }
+            Player.play(state, players);
             System.out.println("------------------------- winner is: " + state.winner);
             if (state.winner == WHITE) {
                 whiteWins++;

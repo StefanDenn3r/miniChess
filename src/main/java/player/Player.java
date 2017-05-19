@@ -3,11 +3,11 @@ package player;
 import board.Move;
 import board.State;
 
-public abstract class Player {
+abstract class Player {
 
     abstract Move move(State state) throws InterruptedException;
 
-    public static void play(State state, Player[] players) throws InterruptedException {
+    static void play(State state, Player[] players) throws InterruptedException {
         while (!state.gameOver) {
             state.printCurrentBoard();
             players[0].move(state);

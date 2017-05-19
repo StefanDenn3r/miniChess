@@ -24,24 +24,23 @@ public class Board {
         return string.toString();
     }
 
-    public char[][] getField() {
+    char[][] getField() {
         return field;
     }
 
-    public void setField(char[][] field) {
+    void setField(char[][] field) {
         this.field = field;
     }
 
-    public char getPiece(int x, int y) {
+    char getPiece(int x, int y) {
         return field[y][x];
     }
 
-    public void setPiece(int x, int y, char c) {
+    void setPiece(int x, int y, char c) {
         field[y][x] = c;
     }
 
-    @Deprecated
-    public static char[][] deepCopyField(char[][] original) {
+    static char[][] deepCopyField(char[][] original) {
         if (original == null) {
             return null;
         }
@@ -49,8 +48,6 @@ public class Board {
         final char[][] result = new char[original.length][];
         for (int i = 0; i < original.length; i++) {
             result[i] = Arrays.copyOf(original[i], original[i].length);
-            // For Java versions prior to Java 6 use the next:
-            // System.arraycopy(original[i], 0, result[i], 0, original[i].length);
         }
         return result;
     }

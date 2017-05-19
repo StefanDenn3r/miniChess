@@ -15,19 +15,11 @@ public class Move {
         return fromSquare.toString() + "-" + toSquare.toString();
     }
 
-    public Square getToSquare() {
+    Square getToSquare() {
         return toSquare;
     }
 
-    public void setToSquare(Square toSquare) {
-        this.toSquare = toSquare;
-    }
-
-    public Square getFromSquare() {
+    Square getFromSquare() {
         return fromSquare;
-    }
-
-    public void setFromSquare(Square fromSquare) {
-        this.fromSquare = fromSquare;
     }
 }

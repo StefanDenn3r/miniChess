@@ -3,7 +3,6 @@
 // Please see the file COPYING at http://github.com/BartMassey/imcs
 
 import board.State;
-import player.HeuristicPlayer;
 import player.NegamaxPlayer;
 
 import java.io.*;
@@ -25,9 +24,9 @@ import java.net.*;
  * class.
  */
 public class Client {
-    BufferedReader in;
-    PrintStream out;
-    String sendLineEnding = "\r\n";
+    private BufferedReader in;
+    private PrintStream out;
+    private String sendLineEnding = "\r\n";
 
     public static void main(String[] args) throws IOException {
         char color = 'w';
@@ -84,7 +83,7 @@ public class Client {
      * @return response
      */
 
-    public String expectResponse(boolean verbose)
+    private String expectResponse(boolean verbose)
             throws IOException {
         String response;
         while (true) {
@@ -112,7 +111,7 @@ public class Client {
      *
      * @return response code number string
      */
-    public static String responseCode(String response) {
+    private static String responseCode(String response) {
         return response.substring(0, 3);
     }
 
@@ -124,7 +123,7 @@ public class Client {
      *
      * @return response string
      */
-    public static String responseString(String response) {
+    private static String responseString(String response) {
         return response.substring(4);
     }
 
@@ -138,7 +137,7 @@ public class Client {
      *
      * @return response
      */
-    public String expect(String code, boolean verbose)
+    private String expect(String code, boolean verbose)
             throws IOException {
         String response = expectResponse(verbose);
         return responseString(response);
@@ -150,7 +149,7 @@ public class Client {
      * @param cmd     command to send
      * @param verbose if true, print the command sent on stdout
      */
-    public void send(String cmd, boolean verbose) {
+    private void send(String cmd, boolean verbose) {
         if (verbose)
             System.out.println(cmd);
         out.print(cmd + sendLineEnding);
@@ -165,8 +164,8 @@ public class Client {
      * @param username username of account on IMCS server
      * @param password password of account on IMCS server
      */
-    public Client(String server, String portStr,
-                  String username, String password) throws IOException {
+    private Client(String server, String portStr,
+                   String username, String password) throws IOException {
         sendLineEnding = "\r\n";
         setClient(server, portStr, username, password);
     }
@@ -187,8 +186,8 @@ public class Client {
         setClient(server, portStr, username, password);
     }
 
-    void setClient(String server, String portStr,
-                   String username, String password) throws IOException {
+    private void setClient(String server, String portStr,
+                           String username, String password) throws IOException {
         int port = Integer.parseInt(portStr);
         Socket s = new Socket(server, port);
         InputStreamReader isr =
@@ -233,7 +232,7 @@ public class Client {
      *
      * @param moveStr move string to send
      */
-    public void sendMove(String moveStr)
+    private void sendMove(String moveStr)
             throws IOException {
         String line;
         do {
@@ -257,7 +256,7 @@ public class Client {
      *
      * @return the color that your side should play
      */
-    public char offer(char color)
+    private char offer(char color)
             throws IOException {
         if (color == '?')
             send("offer", true);
@@ -282,7 +281,7 @@ public class Client {
      *
      * @return the color that your side should play
      */
-    public char accept(String id, char color)
+    private char accept(String id, char color)
             throws IOException {
         if (color == '?')
             send("accept " + id, true);
@@ -300,7 +299,7 @@ public class Client {
      * Closes the connection to the server. Do not use the
      * object after this.
      */
-    public void close()
+    private void close()
             throws IOException {
         in.close();
         out.close();
