@@ -13,7 +13,7 @@ public class NegamaxPlayerTest {
         int blackWins = 0;
         for (int i = 0; i < 1; i++) {
             State state = new State();
-            Player[] players = {new NegamaxPlayer(5), new ABPruningPlayer()};
+            Player[] players = {new NegamaxPlayer(6), new NegamaxPlayer(6)};
             Player.play(state, players);
             System.out.println("------------------------- winner is: " + state.winner);
             if (state.winner == WHITE) {

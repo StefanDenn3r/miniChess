@@ -4,29 +4,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import static board.Board.deepCopyField;
-import static board.Capture.FALSE;
-import static board.Capture.ONLY;
-import static board.Capture.TRUE;
+import static board.Capture.*;
 import static board.Color.BLACK;
 import static board.Color.WHITE;
 import static board.Square.convertToSquare;
-import static java.lang.Character.isLowerCase;
-import static java.lang.Character.isUpperCase;
-import static java.lang.Character.toLowerCase;
-import static java.lang.Character.toUpperCase;
+import static java.lang.Character.*;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Integer.MIN_VALUE;
 import static java.lang.Math.max;
 import static java.lang.Math.random;
+import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.split;
 
 public class State {
@@ -94,19 +87,21 @@ public class State {
 
     public Move move(String value) {
         String[] squares = split(value, '-');
-        if (squares.length != 2)
+        if (squares.length != 2) {
             throw new IllegalArgumentException("Move is invalid");
+        }
         return move(validateMove(new Move(convertToSquare(squares[0]), convertToSquare(squares[1]))));
     }
 
     private Move validateMove(Move move) {
         final Square moveToSquare = move.getToSquare();
-        List<Move> legalMoves = new ArrayList<Move>();
+        List<Move> legalMoves = new ArrayList<>();
         generateMoveListForPiece(legalMoves, move.getFromSquare().getX(), move.getFromSquare().getY());
         for (Move legalMove : legalMoves) {
             final Square legalMoveToSquare = legalMove.getToSquare();
-            if (legalMoveToSquare.getX() == moveToSquare.getX() && legalMoveToSquare.getY() == moveToSquare.getY())
+            if (legalMoveToSquare.getX() == moveToSquare.getX() && legalMoveToSquare.getY() == moveToSquare.getY()) {
                 return move;
+            }
         }
         throw new IllegalArgumentException("Move is invalid");
     }
@@ -133,37 +128,32 @@ public class State {
         final State stateForThread = this;
         staticSideOnMove = this.sideOnMove;
         List<Move> moves = this.generateMoveList();
-        List<Move> bestMoves = new ArrayList<Move>();
+        List<Move> bestMoves = new ArrayList<>();
         Integer bestScore = MAX_VALUE;
         ExecutorService service = Executors.newCachedThreadPool();
-        Map<Move, Future<Integer>> results = new HashMap<Move, Future<Integer>>();
-        for (Move move : moves) {
-            final Move moveForThread = move;
-            results.put(moveForThread, service.submit(new Callable<Integer>() {
-                                                          public Integer call() throws Exception {
-                                                              return negamax(stateForThread, depthForThread, moveForThread);
-                                                          }
-                                                      }
-            ));
-        }
+        Map<Move, Future<Integer>> results = moves.stream()
+                                                  .collect(toMap(moveForThread -> moveForThread,
+                                                                 moveForThread -> service.submit(() -> negamax(
+                                                                         stateForThread,
+                                                                         depthForThread,
+                                                                         moveForThread)),
+                                                                 (a, b) -> b));
 
         int counter = results.size() - 1;
         while (counter >= 0) {
-            Map<Move, Future<Integer>> copy = new HashMap<Move, Future<Integer>>(results);
+            Map<Move, Future<Integer>> copy = new HashMap<>(results);
             for (Map.Entry<Move, Future<Integer>> value : copy.entrySet()) {
                 if (results.get(value.getKey()).isDone()) {
                     Integer tmpScore = null;
                     try {
                         tmpScore = results.get(value.getKey()).get();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
+                    } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();
                     }
                     if (bestScore >= tmpScore) {
-                        if (bestScore.compareTo(tmpScore) == 0)
+                        if (bestScore.compareTo(tmpScore) == 0) {
                             bestMoves.add(value.getKey());
-                        else {
+                        } else {
                             bestMoves.clear();
                             bestMoves.add(value.getKey());
                         }
@@ -180,15 +170,15 @@ public class State {
     private Move calculateBestWithAb(int depth) throws InterruptedException {
         staticSideOnMove = this.sideOnMove;
         List<Move> moves = this.generateMoveList();
-        List<Move> bestMoves = new ArrayList<Move>();
-        Integer bestScore = MIN_VALUE;
+        List<Move> bestMoves = new ArrayList<>();
+        int bestScore = MIN_VALUE;
         for (Move move : moves) {
             if (moveCapturesEnemyKing(move)) return move;
             int tmpScore = abPruning(this, move, depth, MIN_VALUE, MAX_VALUE, -1);
             if (bestScore <= tmpScore) {
-                if (bestScore == tmpScore)
+                if (bestScore == tmpScore) {
                     bestMoves.add(move);
-                else {
+                } else {
                     bestMoves.clear();
                     bestMoves.add(move);
                 }
@@ -203,14 +193,12 @@ public class State {
             startTime = System.currentTimeMillis();
         }
         if (iterator % 10000 == 0) {
-            if (System.currentTimeMillis() - startTime >= timeLimit)
+            if (System.currentTimeMillis() - startTime >= timeLimit) {
                 throw new InterruptedException("time is over");
+            }
         }
         iterator++;
-        State tmpState = new State();
-        tmpState.board.setField(deepCopyField(state.board.getField()));
-        tmpState.sideOnMove = state.sideOnMove;
-        tmpState.move(move);
+        State tmpState = preprocessField(state, move);
 
         int bestScore = MIN_VALUE;
 
@@ -223,27 +211,34 @@ public class State {
             int tmpBestScore = -abPruning(tmpState, tmpMove, depth - 1, -b, -a, -color);
             bestScore = max(tmpBestScore, bestScore);
             a = max(a, tmpBestScore);
-            if (a >= b)
+            if (a >= b) {
                 break;
+            }
         }
         return bestScore;
     }
 
     private Integer negamax(State state, int depth, Move move) {
-        State tmpState = new State();
-        tmpState.board.setField(deepCopyField(state.board.getField()));
-        tmpState.sideOnMove = state.sideOnMove;
-        tmpState.move(move);
+        State tmpState = preprocessField(state, move);
 
-        if (depth == 0 || tmpState.generateMoveList() == null || tmpState.winner != null && tmpState.winner.equals(staticSideOnMove)) {
+        if (depth == 0 || tmpState.generateMoveList() == null || tmpState.winner != null && tmpState.winner.equals(
+                staticSideOnMove)) {
             return tmpState.pointScore();
         }
-        Integer bestValue = MIN_VALUE;
+        int bestValue = MIN_VALUE;
         for (Move tmpMove : tmpState.generateMoveList()) {
             int v = -negamax(tmpState, depth - 1, tmpMove);
             bestValue = max(bestValue, v);
         }
         return bestValue;
+    }
+
+    private State preprocessField(State state, Move move) {
+        State tmpState = new State();
+        tmpState.board.setField(deepCopyField(state.board.getField()));
+        tmpState.sideOnMove = state.sideOnMove;
+        tmpState.move(move);
+        return tmpState;
     }
 
 
@@ -271,11 +266,12 @@ public class State {
     }
 
     public List<Move> generateMoveList() {
-        List<Move> moves = new ArrayList<Move>();
+        List<Move> moves = new ArrayList<>();
         for (int y = 0; y < board.getField().length; y++) {
             for (int x = 0; x < board.getField()[y].length; x++) {
-                if (isMoversPiece(x, y))
+                if (isMoversPiece(x, y)) {
                     generateMoveListForPiece(moves, x, y);
+                }
             }
         }
         if (moves.isEmpty()) {
@@ -338,18 +334,23 @@ public class State {
         do {
             x = x + dx;
             y = y + dy;
-            if (!isInBounds(x, y))
+            if (!isInBounds(x, y)) {
                 break;
+            }
             if (isOccupied(x, y)) {
-                if (isMoversPiece(x, y))
+                if (isMoversPiece(x, y)) {
                     break;
-                if (capture.equals(FALSE))
+                }
+                if (capture.equals(FALSE)) {
                     break;
+                }
                 stopShort = true;
-            } else if (capture.equals(ONLY))
+            } else if (capture.equals(ONLY)) {
                 break;
+            }
             moves.add(new Move(new Square(x0, y0), new Square(x, y)));
-        } while (!stopShort);
+        }
+        while (!stopShort);
     }
 
     private boolean isInBounds(int x, int y) {
@@ -374,8 +375,9 @@ public class State {
                 }
             }
         }
-        if (sideOnMove.equals(BLACK))
+        if (sideOnMove.equals(BLACK)) {
             return -score;
+        }
         return score;
     }
 
@@ -416,21 +418,26 @@ public class State {
         final Square fromSquare = move.getFromSquare();
         final int x = fromSquare.getX();
         final int y = fromSquare.getY();
-        if (!isMoversPiece(x, y))
-
+        if (!isMoversPiece(x, y)) {
             throw new IllegalStateException("Is not movers piece");
+        }
     }
 
     private boolean isMoversPiece(int x, int y) {
-        return isUpperCase(board.getPiece(x, y)) && sideOnMove == WHITE || isLowerCase(board.getPiece(x, y)) && sideOnMove == BLACK;
+        return isUpperCase(board.getPiece(x, y)) && sideOnMove == WHITE || isLowerCase(board.getPiece(x,
+                                                                                                      y)) && sideOnMove == BLACK;
     }
 
     private Color getPieceColor(int x, int y) {
         if (isOccupied(x, y)) {
-            if (isUpperCase(board.getPiece(x, y)))
+            if (isUpperCase(board.getPiece(x, y))) {
                 return WHITE;
-            else return BLACK;
-        } else throw new IllegalArgumentException("Field isn't occupied");
+            } else {
+                return BLACK;
+            }
+        } else {
+            throw new IllegalArgumentException("Field isn't occupied");
+        }
     }
 
     public Board getBoard() {
@@ -443,14 +450,9 @@ public class State {
 
     private boolean moveCapturesEnemyKing(Move move) {
         if (staticSideOnMove.equals(Color.WHITE)) {
-            if (this.board.getPiece(move.getToSquare().getX(), move.getToSquare().getY()) == 'k') {
-                return true;
-            }
+            return this.board.getPiece(move.getToSquare().getX(), move.getToSquare().getY()) == 'k';
         } else {
-            if (this.board.getPiece(move.getToSquare().getX(), move.getToSquare().getY()) == 'K') {
-                return true;
-            }
+            return this.board.getPiece(move.getToSquare().getX(), move.getToSquare().getY()) == 'K';
         }
-        return false;
     }
 }

@@ -1,6 +1,6 @@
 package board;
 
-import java.util.Arrays;
+import static java.util.Arrays.copyOf;
 
 public class Board {
     private char[][] field = {
@@ -47,7 +47,7 @@ public class Board {
 
         final char[][] result = new char[original.length][];
         for (int i = 0; i < original.length; i++) {
-            result[i] = Arrays.copyOf(original[i], original[i].length);
+            result[i] = copyOf(original[i], original[i].length);
         }
         return result;
     }

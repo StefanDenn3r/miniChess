@@ -3,11 +3,13 @@
 // Please see the file COPYING at http://github.com/BartMassey/imcs
 
 import board.State;
-import player.ABPruningPlayer;
 import player.NegamaxPlayer;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.Socket;
 
 /**
  * Provides an interface to the Internet MiniChess Server.
@@ -31,12 +33,12 @@ public class Client {
 
     public static void main(String[] args) throws IOException {
         char color = 'w';
-        String gameID = "15587";
+        String gameID = "15598";
         State state = new State();
         Client client = new Client("imcs.svcs.cs.pdx.edu", "3589", "win_ner", "halloandi");
         //try {
-        acceptGame(color, gameID, state, client);
-        //offerGame(color, state, client);
+        //acceptGame(color, gameID, state, client);
+        offerGame(color, state, client);
         //} catch (Exception e) {
         //}
     }
@@ -80,7 +82,6 @@ public class Client {
      * is received.
      *
      * @param verbose if true, print the command sent on stdout
-     *
      * @return response
      */
 
@@ -89,18 +90,24 @@ public class Client {
         String response;
         while (true) {
             response = in.readLine();
-            if (response == null)
+            if (response == null) {
                 throw new IOException("expectResponse: EOF");
-            if (verbose)
+            }
+            if (verbose) {
                 System.out.println(response);
-            if (response.length() < 3)
+            }
+            if (response.length() < 3) {
                 continue;
+            }
             int i = 0;
-            for (; i < 3; i++)
-                if (!Character.isDigit(response.charAt(i)))
+            for (; i < 3; i++) {
+                if (!Character.isDigit(response.charAt(i))) {
                     break;
-            if (i < 3)
+                }
+            }
+            if (i < 3) {
                 continue;
+            }
             return response;
         }
     }
@@ -109,7 +116,6 @@ public class Client {
      * Get the response code from a response.
      *
      * @param response response
-     *
      * @return response code number string
      */
     private static String responseCode(String response) {
@@ -121,7 +127,6 @@ public class Client {
      * Get the response text from a response.
      *
      * @param response response
-     *
      * @return response string
      */
     private static String responseString(String response) {
@@ -135,7 +140,6 @@ public class Client {
      *
      * @param code    expected code
      * @param verbose if true, print the command sent on stdout
-     *
      * @return response
      */
     private String expect(String code, boolean verbose)
@@ -151,8 +155,9 @@ public class Client {
      * @param verbose if true, print the command sent on stdout
      */
     private void send(String cmd, boolean verbose) {
-        if (verbose)
+        if (verbose) {
             System.out.println(cmd);
+        }
         out.print(cmd + sendLineEnding);
         out.flush();
     }
@@ -196,8 +201,9 @@ public class Client {
         in = new BufferedReader(isr);
         out = new PrintStream(s.getOutputStream(), true);
         String version = expectResponse(false);
-        if (!"imcs 2.5".equals(responseString(version)))
+        if (!"imcs 2.5".equals(responseString(version))) {
             throw new Error("client: imcs version mismatch");
+        }
         send("me " + username + " " + password, true);
         expect("201", true);
     }
@@ -214,17 +220,21 @@ public class Client {
         char ch;
         while (true) {
             line = in.readLine();
-            if (line == null)
+            if (line == null) {
                 return null;
+            }
             System.out.println(line);
-            if (line.length() == 0)
+            if (line.length() == 0) {
                 continue;
+            }
             ch = line.charAt(0);
-            if (ch == '!' || ch == '=')
+            if (ch == '!' || ch == '=') {
                 break;
+            }
         }
-        if (ch == '=')
+        if (ch == '=') {
             return null;
+        }
         return line.substring(2);
     }
 
@@ -238,10 +248,12 @@ public class Client {
         String line;
         do {
             line = in.readLine();
-            if (line == null)
+            if (line == null) {
                 throw new IOException("server terminated unexpectedly");
+            }
             System.out.println(line);
-        } while (line.length() == 0 || line.charAt(0) != '?');
+        }
+        while (line.length() == 0 || line.charAt(0) != '?');
         System.out.println(moveStr);
         out.print(moveStr + sendLineEnding);
         out.flush();
@@ -254,21 +266,22 @@ public class Client {
      * Blocks until the offer is accepted.
      *
      * @param color the color your side wants to play
-     *
      * @return the color that your side should play
      */
     private char offer(char color)
             throws IOException {
-        if (color == '?')
+        if (color == '?') {
             send("offer", true);
-        else
+        } else {
             send("offer " + color, true);
+        }
         expect("103", true);
         String code = responseCode(expectResponse(true));
-        if (code.equals("105"))
+        if (code.equals("105")) {
             return 'W';
-        else if (code.equals("106"))
+        } else if (code.equals("106")) {
             return 'B';
+        }
         throw new IOException("offer: unknown response code");
     }
 
@@ -279,20 +292,22 @@ public class Client {
      *
      * @param id    game id number string
      * @param color the color that your side wants to play
-     *
      * @return the color that your side should play
      */
     private char accept(String id, char color)
             throws IOException {
-        if (color == '?')
+        if (color == '?') {
             send("accept " + id, true);
-        else
+        } else {
             send("accept " + id + " " + color, true);
+        }
         String code = responseCode(expectResponse(true));
-        if (code.equals("105"))
+        if (code.equals("105")) {
             return 'W';
-        if (code.equals("106"))
+        }
+        if (code.equals("106")) {
             return 'B';
+        }
         throw new IOException("accept: unknown response code");
     }
 

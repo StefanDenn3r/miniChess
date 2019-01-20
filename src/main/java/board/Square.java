@@ -8,8 +8,9 @@ public class Square {
         if (x >= 0 && x <= 4 && y >= 0 && y <= 5) {
             this.x = x;
             this.y = y;
-        } else
+        } else {
             throw new IllegalArgumentException("x or y not a valid number");
+        }
     }
 
     static Square convertToSquare(String string) {
